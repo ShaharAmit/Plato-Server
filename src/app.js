@@ -38,23 +38,59 @@ var Promise = require('es6-promise');
 var App = /** @class */ (function () {
     function App() {
         this.fb = new firebase1();
-        this.test();
+        this.shaharTests();
     }
-    App.prototype.test = function () {
+    App.prototype.shaharTests = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var z;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log('start debug');
-                        return [4 /*yield*/, this.fb.getFile('items/shahar/shaharCol/shaharDoc')];
-                    case 1:
-                        z = _a.sent();
-                        console.log(z);
-                        return [2 /*return*/];
-                }
+                this.setListener('Customers/304861412', this.helloTest);
+                return [2 /*return*/];
             });
         });
+    };
+    App.prototype.danielLuzTests = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    App.prototype.lorainTests = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    App.prototype.danaIgraTests = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    App.prototype.danielYosefTests = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    // Listen for any change on document and prints it's values
+    // can send values to another functions or anything...
+    App.prototype.setListener = function (path, func) {
+        try {
+            this.fb.db.doc(path).onSnapshot(function (doc) {
+                console.log("Current data: ", doc.data());
+                func();
+            });
+        }
+        catch (err) {
+            console.log(err);
+        }
+    };
+    App.prototype.helloTest = function () {
+        console.log('hey');
     };
     return App;
 }());

@@ -13,7 +13,9 @@ class FirebaseInitialize {
         this.db = db;
     }
 
-    async getFile(path) {
+    // read document and returns it values
+    // return null if problem occur
+    async getDoc(path) {
         try{
             let docRef = this.db.doc(path);
             let val:any;

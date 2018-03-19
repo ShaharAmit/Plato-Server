@@ -4,7 +4,7 @@ var Promise = require('es6-promise')
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://plato-test-bc0d5.firebaseio.com'
+    databaseURL: 'https://plato-7fb01.firebaseio.com'
 });
 
 class FirebaseInit {
@@ -12,8 +12,9 @@ class FirebaseInit {
     constructor() {
         this.db = admin.firestore();
     }
-
-    async getFile(path) {
+    // read document and returns it values
+    // return null if problem occur
+    async getDoc(path) {
         try{
             let docRef = this.db.doc(path);
             let val:any;

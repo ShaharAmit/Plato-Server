@@ -38,13 +38,15 @@ var serviceAccount = require('./config.json');
 var Promise = require('es6-promise');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://plato-test-bc0d5.firebaseio.com'
+    databaseURL: 'https://plato-7fb01.firebaseio.com'
 });
 var FirebaseInit = /** @class */ (function () {
     function FirebaseInit() {
         this.db = admin.firestore();
     }
-    FirebaseInit.prototype.getFile = function (path) {
+    // read document and returns it values
+    // return null if problem occur
+    FirebaseInit.prototype.getDoc = function (path) {
         return __awaiter(this, void 0, void 0, function () {
             var docRef, val_1, err_1;
             return __generator(this, function (_a) {

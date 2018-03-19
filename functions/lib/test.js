@@ -24,10 +24,8 @@ function test(path) {
 }
 exports.handler = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        // Use database to declare databaseRefs:
-        let t = yield test('items/shahar/shaharCol/shaharDoc');
-        console.log('zibi');
-        console.log(t);
+        let answer = yield test('Customers/304861412');
+        console.log(answer);
         res.send('test ran successfully');
     });
 };

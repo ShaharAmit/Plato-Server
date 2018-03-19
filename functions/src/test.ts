@@ -11,7 +11,7 @@ async function test(path) {
 }
 
 exports.handler = async function(req, res) {
-    let answer = await test('items/shahar/shaharCol/shaharDoc');
+    let answer = await test('Customers/304861412');
     console.log(answer);
     res.send('test ran successfully'); 
  }

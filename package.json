@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "buildAll" : "tsc src/*.ts services/*.ts",
+    "buildAll": "tsc src/*.ts services/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
