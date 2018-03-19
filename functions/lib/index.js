@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const testFunction = require('./test');
-const danielFunc = require('./danielFunc');
+const docChangeExapmle = require('./docChangeExapmle');
 const firebase = require("../lib/firebase.js");
-var fb = new firebase();
+const fb = new firebase();
 exports.testFunction = fb.functions.https.onRequest((req, res) => {
     testFunction.handler(req, res);
 });
-exports.danielFunc = fb.functions.https.onRequest((req, res) => {
-    danielFunc.handler(req, res);
+exports.docChangeExapmle = fb.functions.firestore
+    .document('Customers/304861412').onWrite((event) => {
+    docChangeExapmle.handler(event);
+    return 0;
 });
 //# sourceMappingURL=index.js.map

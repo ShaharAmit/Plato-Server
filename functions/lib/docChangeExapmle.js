@@ -10,23 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
-function test(path) {
+function hello() {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const z = yield fb.getFile(path);
-            return z;
-        }
-        catch (err) {
-            console.log(err);
-            return null;
-        }
+        console.log(hello);
+        return true;
     });
 }
-exports.handler = function (req, res) {
+exports.handler = function (event) {
     return __awaiter(this, void 0, void 0, function* () {
-        const answer = yield test('Customers/304861412');
-        console.log(answer);
-        res.send('test ran successfully');
+        const test = yield hello();
+        return 0;
     });
 };
-//# sourceMappingURL=test.js.map
+//# sourceMappingURL=docChangeExapmle.js.map

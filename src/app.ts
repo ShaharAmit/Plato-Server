@@ -1,5 +1,5 @@
 var firebase1 = require('../services/firebase.js');
-var Promise: PromiseConstructor = require('es6-promise') 
+var Promise = require('es6-promise') 
 
 class App {
     fb: any;
@@ -8,7 +8,21 @@ class App {
         this.shaharTests();
     }
     async shaharTests() {
-        this.setListener('Customers/304861412', this.helloTest);
+        try {
+            const func = this.helloTest;
+            // Listen for any change on document and prints it's values
+            // can send values to another functions or anything...
+            let unsubscribe = this.fb.db.doc('Customers/304861412').onSnapshot(function(doc) {
+                console.log("Current data: ", doc.data());
+                //run helloTest()
+                func();
+            },function(err){
+                console.log(err)
+            });
+            //to stop listener run -> unsubscribe() **or any variable name that equal the listener;
+        } catch(err) {
+            console.log(err);
+        }
     }
 
     async danielLuzTests () {
@@ -25,19 +39,6 @@ class App {
 
     async danielYosefTests () {
         
-    }
-
-    // Listen for any change on document and prints it's values
-    // can send values to another functions or anything...
-    setListener(path, func) {
-        try {
-            this.fb.db.doc(path).onSnapshot(function(doc) {
-                console.log("Current data: ", doc.data());
-                func();
-            });
-        } catch(err) {
-            console.log(err);
-        }
     }
 
     helloTest() {

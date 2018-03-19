@@ -18,10 +18,12 @@ class FirebaseInitialize {
         this.admin = admin;
         this.db = db;
     }
+    // read document and returns it values
+    // return null if problem occur
     getDoc(path) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let docRef = this.db.doc(path);
+                const docRef = this.db.doc(path);
                 let val;
                 yield docRef.get().then(function (doc) {
                     if (doc && doc.exists) {

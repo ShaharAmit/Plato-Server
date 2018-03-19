@@ -42,8 +42,21 @@ var App = /** @class */ (function () {
     }
     App.prototype.shaharTests = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var func_1, unsubscribe;
             return __generator(this, function (_a) {
-                this.setListener('Customers/304861412', this.helloTest);
+                try {
+                    func_1 = this.helloTest;
+                    unsubscribe = this.fb.db.doc('Customers/304861412').onSnapshot(function (doc) {
+                        console.log("Current data: ", doc.data());
+                        func_1();
+                    }, function (err) {
+                        console.log(err);
+                    });
+                    //to stop listener run -> unsubscribe() **or any variable name that equal the listener;
+                }
+                catch (err) {
+                    console.log(err);
+                }
                 return [2 /*return*/];
             });
         });
@@ -78,17 +91,6 @@ var App = /** @class */ (function () {
     };
     // Listen for any change on document and prints it's values
     // can send values to another functions or anything...
-    App.prototype.setListener = function (path, func) {
-        try {
-            this.fb.db.doc(path).onSnapshot(function (doc) {
-                console.log("Current data: ", doc.data());
-                func();
-            });
-        }
-        catch (err) {
-            console.log(err);
-        }
-    };
     App.prototype.helloTest = function () {
         console.log('hey');
     };
