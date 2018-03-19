@@ -17,7 +17,7 @@ class FirebaseInitialize {
     // return null if problem occur
     async getDoc(path) {
         try{
-            let docRef = this.db.doc(path);
+            const docRef = this.db.doc(path);
             let val:any;
             await docRef.get().then(function(doc){
                 if(doc && doc.exists) {

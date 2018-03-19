@@ -1,5 +1,5 @@
 var firebase1 = require('../services/firebase.js');
-var Promise = require('es6-promise') 
+var Promise: PromiseConstructor = require('es6-promise') 
 
 class App {
     fb: any;

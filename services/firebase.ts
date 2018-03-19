@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('./config.json');
-var Promise = require('es6-promise') 
+var Promise: PromiseConstructor = require('es6-promise') 
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
