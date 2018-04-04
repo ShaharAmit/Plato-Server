@@ -16,7 +16,7 @@ function hello() {
         return true;
     });
 }
-exports.handler = function (event) {
+exports.handler = function (data, context) {
     return __awaiter(this, void 0, void 0, function* () {
         const test = yield hello();
         return 0;

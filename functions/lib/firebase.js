@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("../node_modules/firebase-functions/lib/index");
 const admin = require("../node_modules/firebase-admin/lib/index");
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 const db = admin.firestore();
 class FirebaseInitialize {
     constructor() {

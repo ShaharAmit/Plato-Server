@@ -12,8 +12,8 @@ exports.testFunction = fb.functions.https.onRequest((req, res) => {
 });
 
 exports.docChangeExapmle = fb.functions.firestore
-.document('Customers/304861412').onWrite((event) => {
-    docChangeExapmle.handler(event);
+.document('Customers/304861412').onWrite((data, context) => {
+    docChangeExapmle.handler(data, context);
     return 0;
 });
 

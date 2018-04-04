@@ -5,7 +5,7 @@ async function hello() {
     return true;
 }
 
-exports.handler = async function(event) {
+exports.handler = async function(data, context) {
     const test = await hello();
     return 0;
  }

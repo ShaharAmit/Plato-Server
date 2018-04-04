@@ -1,6 +1,6 @@
 import * as functions from '../node_modules/firebase-functions/lib/index';
 import * as admin from '../node_modules/firebase-admin/lib/index'
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 const db = admin.firestore();
 
 class FirebaseInitialize {
