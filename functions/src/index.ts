@@ -1,6 +1,8 @@
 
 const testFunction = require('./test');
 const docChangeExapmle = require('./docChangeExapmle');
+const amount = require('./amount');
+const redLine = require('./redLine');
 
 
 import * as firebase from '../lib/firebase.js'
@@ -17,3 +19,14 @@ exports.docChangeExapmle = fb.functions.firestore
     return 0;
 });
 
+exports.amount = fb.functions.firestore
+.document('{rest}/{restID}/WarehouseStock/{rawMaterial}').onUpdate((change, context) => {
+    amount.handler(change, context);
+    return 0;
+});
+
+exports.redLine = fb.functions.firestore
+.document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onWrite((change, context) => {
+    redLine.handler(change, context);
+    return 0;
+});

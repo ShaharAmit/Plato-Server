@@ -26,9 +26,30 @@ class FirebaseInitialize {
                 const docRef = this.db.doc(path);
                 let val;
                 yield docRef.get().then(function (doc) {
-                    if (doc && doc.exists) {
+                    if (doc) {
                         const myData = doc.data();
                         val = myData;
+                    }
+                    else {
+                        val = null;
+                    }
+                });
+                return val;
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    getCol(path) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const docRef = this.db.collection(path);
+                let val;
+                yield docRef.get().then(function (docs) {
+                    if (docs) {
+                        val = docs;
                     }
                     else {
                         val = null;

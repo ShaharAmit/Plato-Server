@@ -32,6 +32,23 @@ class FirebaseInit {
             return null;
         }
     }
+    async getCol(path) {
+        try{
+            const docRef = this.db.collection(path);
+            let val:any;
+            await docRef.get().then(function(docs){
+                if(docs) {
+                    val = docs;
+                } else {
+                    val = null;
+                }
+            });
+            return val;
+        } catch(err) {
+            console.log(err);
+            return null;
+        }
+    }
 }
 module.exports = FirebaseInit;
 
