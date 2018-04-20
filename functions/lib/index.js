@@ -20,7 +20,7 @@ exports.amount = fb.functions.firestore
     return 0;
 });
 exports.redLine = fb.functions.firestore
-    .document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onWrite((change, context) => {
+    .document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onCreate((change, context) => {
     redLine.handler(change, context);
     return 0;
 });

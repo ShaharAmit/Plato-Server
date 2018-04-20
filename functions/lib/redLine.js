@@ -30,10 +30,9 @@ exports.handler = function (change, context) {
             yield ref.get().then(function (doc) {
                 if (doc) {
                     data = doc.data().value;
-                    // console.log(data);
                 }
             });
-            yield ref.update({
+            ref.update({
                 value: {
                     amount: data.amount,
                     redLine: max,
@@ -41,12 +40,16 @@ exports.handler = function (change, context) {
                     unit: data.unit,
                     name: data.name
                 }
-            }); //.then(t => {console.log('done')});
+            }).then(func => {
+                console.log('updated redLine');
+                return 0;
+            }).catch(err => {
+                console.log(err);
+            });
         }
         catch (err) {
             console.log(err);
         }
-        return 0;
     });
 };
 //# sourceMappingURL=redLine.js.map

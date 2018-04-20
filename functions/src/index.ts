@@ -26,7 +26,7 @@ exports.amount = fb.functions.firestore
 });
 
 exports.redLine = fb.functions.firestore
-.document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onWrite((change, context) => {
+.document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onCreate((change, context) => {
     redLine.handler(change, context);
     return 0;
 });

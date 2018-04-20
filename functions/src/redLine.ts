@@ -1,5 +1,4 @@
 import * as firebase from '../lib/firebase.js'
-import { basename } from 'path';
 const fb = new firebase();
 exports.handler = async function(change, context) {
     try {
@@ -20,11 +19,10 @@ exports.handler = async function(change, context) {
         await ref.get().then(function(doc){
             if(doc) {
                 data = doc.data().value;
-                // console.log(data);
             }
         });
-
-        await ref.update({
+        
+        ref.update({
             value : {
                 amount : data.amount,
                 redLine : max,
@@ -32,10 +30,13 @@ exports.handler = async function(change, context) {
                 unit : data.unit,
                 name : data.name
             }
-        })//.then(t => {console.log('done')});
+        }).then(func => {
+            console.log('updated redLine'); 
+            return 0
+        }).catch(err=>{
+            console.log(err)
+        });
     } catch(err) {
         console.log(err);
     }
-    
-    return 0;
- }
+}
