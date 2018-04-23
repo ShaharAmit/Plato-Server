@@ -1,17 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const testFunction = require('./test');
-const docChangeExapmle = require('./docChangeExapmle');
+const sendMessage = require('./sendMessage');
 const amount = require('./amount');
 const redLine = require('./redLine');
+const registerToRest = require('./registerToRest');
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
-exports.testFunction = fb.functions.https.onRequest((req, res) => {
-    testFunction.handler(req, res);
+exports.registerToRest = fb.functions.https.onRequest((req, res) => {
+    registerToRest.handler(req, res);
 });
-exports.docChangeExapmle = fb.functions.firestore
-    .document('Customers/304861412').onWrite((data, context) => {
-    docChangeExapmle.handler(data, context);
+exports.sendMessage = fb.functions.firestore
+    .document('{rest}/{restID}/Messages/{receiverID}/Messages/{messageID}')
+    .onCreate((change, context) => {
+    sendMessage.handler(change, context);
     return 0;
 });
 exports.amount = fb.functions.firestore

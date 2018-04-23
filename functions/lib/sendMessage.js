@@ -10,11 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
-exports.handler = function (req, res) {
+exports.handler = function (change, context) {
     return __awaiter(this, void 0, void 0, function* () {
-        const path = req.query.path;
-        const test = yield fb.getdoc(path);
-        return 0;
+        const receiverID = context.params.receiverID;
+        const data = change.data();
+        fb.messaging.sendToTopic(receiverID, { notification: {
+                title: data.message.title,
+                body: data.message.body,
+                click_action: data.message.url,
+                icon: "https://firebasestorage.googleapis.com/v0/b/plato-9a79e.appspot.com/o/logo.png?alt=media&token=1c6777fa-4aed-45ce-a31e-fb66af8aa125"
+            } }).then(function () {
+            console.log('succes');
+            return 0;
+        }).catch(err => {
+            console.error(err);
+        });
     });
 };
-//# sourceMappingURL=docChangeExapmle.js.map
+//# sourceMappingURL=sendMessage.js.map

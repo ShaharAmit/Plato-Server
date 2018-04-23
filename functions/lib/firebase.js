@@ -12,11 +12,13 @@ const functions = require("../node_modules/firebase-functions/lib/index");
 const admin = require("../node_modules/firebase-admin/lib/index");
 admin.initializeApp();
 const db = admin.firestore();
+const messaging = admin.messaging();
 class FirebaseInitialize {
     constructor() {
         this.functions = functions;
         this.admin = admin;
         this.db = db;
+        this.messaging = messaging;
     }
     // read document and returns it values
     // return null if problem occur

@@ -16,7 +16,6 @@ exports.handler = function (change, context) {
             const rest = context.params.rest;
             const restID = context.params.restID;
             const rawMaterial = context.params.rawMaterial;
-            const meal = context.params.meal;
             const docs = yield fb.getCol(rest + '/' + restID + '/WarehouseStock/' + rawMaterial + '/Meals');
             let max = 0;
             docs.forEach(doc => {

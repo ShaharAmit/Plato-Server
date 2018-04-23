@@ -1,23 +1,25 @@
 
 const testFunction = require('./test');
-const docChangeExapmle = require('./docChangeExapmle');
+const sendMessage = require('./sendMessage');
 const amount = require('./amount');
 const redLine = require('./redLine');
+const registerToRest = require('./registerToRest');
 
 
 import * as firebase from '../lib/firebase.js'
 
 const fb = new firebase();
 
-exports.testFunction = fb.functions.https.onRequest((req, res) => {
-    testFunction.handler(req, res);
+exports.registerToRest = fb.functions.https.onRequest((req, res) => {
+    registerToRest.handler(req, res);
 });
 
-exports.docChangeExapmle = fb.functions.firestore
-.document('Customers/304861412').onWrite((data, context) => {
-    docChangeExapmle.handler(data, context);
-    return 0;
-});
+exports.sendMessage = fb.functions.firestore
+    .document('{rest}/{restID}/Messages/{receiverID}/Messages/{messageID}')
+    .onCreate((change,context) => {
+        sendMessage.handler(change, context);
+        return 0;
+    });
 
 exports.amount = fb.functions.firestore
 .document('{rest}/{restID}/WarehouseStock/{rawMaterial}').onUpdate((change, context) => {
@@ -30,3 +32,4 @@ exports.redLine = fb.functions.firestore
     redLine.handler(change, context);
     return 0;
 });
+

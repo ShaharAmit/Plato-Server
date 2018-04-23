@@ -2,15 +2,17 @@ import * as functions from '../node_modules/firebase-functions/lib/index';
 import * as admin from '../node_modules/firebase-admin/lib/index'
 admin.initializeApp();
 const db = admin.firestore();
-
+const messaging = admin.messaging();
 class FirebaseInitialize {
     db: any;
     admin: any;
     functions: any;
+    messaging: any;
     constructor() {
         this.functions = functions;
         this.admin = admin;
         this.db = db;
+        this.messaging = messaging;
     }
 
     // read document and returns it values

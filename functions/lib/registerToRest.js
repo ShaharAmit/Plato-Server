@@ -12,9 +12,15 @@ const firebase = require("../lib/firebase.js");
 const fb = new firebase();
 exports.handler = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const path = req.query.path;
-        const test = yield fb.getdoc(path);
-        return 0;
+        const rest = req.query.rest;
+        const token = req.query.token;
+        const restRoot = 'RestAlfa';
+        const message = yield fb.getCol(restRoot + '/' + rest + '/Messages');
+        message.forEach(element => {
+            fb.messaging.subscribeToTopic([token], element.id).then(function () {
+                res.send({ success: true });
+            });
+        });
     });
 };
-//# sourceMappingURL=docChangeExapmle.js.map
+//# sourceMappingURL=registerToRest.js.map
