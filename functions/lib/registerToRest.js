@@ -14,12 +14,8 @@ exports.handler = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const rest = req.query.rest;
         const token = req.query.token;
-        const restRoot = 'RestAlfa';
-        const message = yield fb.getCol(restRoot + '/' + rest + '/Messages');
-        message.forEach(element => {
-            fb.messaging.subscribeToTopic([token], element.id).then(function () {
-                res.send({ success: true });
-            });
+        fb.messaging.subscribeToTopic([token], rest).then(function () {
+            res.send({ success: true });
         });
     });
 };

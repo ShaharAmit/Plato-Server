@@ -1,9 +1,8 @@
-
-const testFunction = require('./test');
 const sendMessage = require('./sendMessage');
 const amount = require('./amount');
 const redLine = require('./redLine');
 const registerToRest = require('./registerToRest');
+const missingChanged = require('./missingChanged');
 
 
 import * as firebase from '../lib/firebase.js'
@@ -11,25 +10,33 @@ import * as firebase from '../lib/firebase.js'
 const fb = new firebase();
 
 exports.registerToRest = fb.functions.https.onRequest((req, res) => {
-    registerToRest.handler(req, res);
+    const val = registerToRest.handler(req, res);
+    return val;
 });
 
+exports.missingChanged = fb.functions.firestore
+    .document('{rest}/{restID}/Meals/{mealName}')
+    .onUpdate((change,context)=> {
+        const val = missingChanged.handler(change,context);
+        return val;
+    })
+
 exports.sendMessage = fb.functions.firestore
-    .document('{rest}/{restID}/Messages/{receiverID}/Messages/{messageID}')
+    .document('{rest}/{restID}/Messages/{messageID}')
     .onCreate((change,context) => {
-        sendMessage.handler(change, context);
-        return 0;
+        const val = sendMessage.handler(change, context);
+        return val;
     });
 
 exports.amount = fb.functions.firestore
 .document('{rest}/{restID}/WarehouseStock/{rawMaterial}').onUpdate((change, context) => {
-    amount.handler(change, context);
-    return 0;
+    const val = amount.handler(change, context);
+    return val;
 });
 
 exports.redLine = fb.functions.firestore
 .document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onCreate((change, context) => {
-    redLine.handler(change, context);
-    return 0;
+    const val = redLine.handler(change, context);
+    return val;
 });
 
