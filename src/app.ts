@@ -7,12 +7,13 @@ class App {
         this.fb = new firebase1();
         this.shaharTests();
     }
-    async shaharTests() {
+    shaharTests() {
         try {
             const func = this.helloTest;
             // Listen for any change on document and prints it's values
             // can send values to another functions or anything...
-            let unsubscribe = this.fb.db.doc('Customers/304861412').onSnapshot(function(doc) {
+            let unsubscribe = this.fb.db.doc('Customers/XYSD2ZCHf4P6RQY56vlga5h6CyE2')
+                .onSnapshot(function(doc) {
                 console.log("Current data: ", doc.data());
                 //run helloTest()
                 func();
@@ -25,19 +26,19 @@ class App {
         }
     }
 
-    async danielLuzTests () {
+    danielLuzTests () {
 
     }
 
-    async lorainTests () {
+    loraineTests () {
         
     }
 
-    async danaIgraTests () {
+    danaIgraTests () {
         
     }
 
-    async danielYosefTests () {
+    danielYosefTests () {
         
     }
 

@@ -14,36 +14,34 @@ class FirebaseInit {
     }
     // read document and returns it values
     // return null if problem occur
-    async getDoc(path) {
+    getDoc(path) {
         try{
             let docRef = this.db.doc(path);
             let val:any;
-            await docRef.get().then(function(doc){
+            docRef.get().then(function(doc){
                 if(doc && doc.exists) {
                     const myData = doc.data();
-                    val = myData;
+                    return myData;
                 } else {
                     val = null;
                 }
             });
-            return val;
         } catch(err) {
             console.log(err);
             return null;
         }
     }
-    async getCol(path) {
+    getCol(path) {
         try{
             const docRef = this.db.collection(path);
             let val:any;
-            await docRef.get().then(function(docs){
+            docRef.get().then(function(docs){
                 if(docs) {
-                    val = docs;
+                    return docs;
                 } else {
                     val = null;
                 }
             });
-            return val;
         } catch(err) {
             console.log(err);
             return null;
