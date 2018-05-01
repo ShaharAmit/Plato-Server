@@ -10,13 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
-exports.handler = function (req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const rest = req.query.rest;
-        const token = req.query.token;
-        fb.messaging.subscribeToTopic([token], rest).then(function () {
-            res.send({ success: true });
-        });
+exports.handler = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    const rest = req.query.rest;
+    const token = req.query.token;
+    fb.messaging.subscribeToTopic([token], rest).then(() => {
+        res.send({ success: true });
     });
-};
+});
 //# sourceMappingURL=registerToRest.js.map

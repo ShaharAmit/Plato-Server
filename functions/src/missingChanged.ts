@@ -10,7 +10,7 @@ function writeMessages(missing, rest, restID, mealName,url,icon) {
             icon: icon        
         });
     }
-    return batch.commit().then(function(){console.log('messages added')}).catch(err => console.log(err));
+    return batch.commit().then(() => {console.log('messages added')}).catch(err => console.log(err));
 }
 
 function removeMessages(bMissing, rest, restID, mealName) {
@@ -18,10 +18,10 @@ function removeMessages(bMissing, rest, restID, mealName) {
     for(const rawMaterial of bMissing) {
         batch.delete(fb.db.doc(rest+'/'+restID+'/Messages/'+mealName));
     }
-    return batch.commit().then(function(){console.log('messages removed')}).catch(err => console.log(err));
+    return batch.commit().then(() => {console.log('messages removed')}).catch(err => console.log(err));
 }
 
-exports.handler = async function(change, context) {
+exports.handler = async (change, context) => {
     try {
         const before = change.before.data(),
         after = change.after.data(),

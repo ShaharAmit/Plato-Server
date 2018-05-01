@@ -1,41 +1,44 @@
 import * as firebase from '../lib/firebase.js'
 const fb = new firebase();
-exports.handler = async function(change, context) {
+exports.handler = async (change, context) => {
     try {
         const rest = context.params.rest;
         const restID = context.params.restID;
         const rawMaterial = context.params.rawMaterial
-        const docs = await fb.getCol(rest+'/'+restID+'/WarehouseStock/'+rawMaterial+'/Meals');
-        let max:number = 0;
-        docs.forEach(doc => {
-            const docVals = doc.data();
-            if(max < docVals.redLine) {
-                max = docVals.redLine;
-            }
-        });    
-        let data;
-        const ref = fb.db.doc(rest+'/'+restID+'/WarehouseStock/'+rawMaterial);
-        await ref.get().then(function(doc){
-            if(doc) {
-                data = doc.data().value;
-            }
-        });
-        
-        ref.update({
-            value : {
-                amount : data.amount,
-                redLine : max,
-                type : data.type,
-                unit : data.unit,
-                name : data.name
-            }
-        }).then(func => {
-            console.log('updated redLine'); 
-            return 0
-        }).catch(err=>{
-            console.log(err)
-        });
+        fb.db.collection(rest+'/'+restID+'/WarehouseStock/'+rawMaterial+'/Meals')
+            .get()
+            .then(docs => {
+                let max:number = 0;
+                docs.forEach(doc => {
+                    const docVals = doc.data();
+                    if(max < docVals.redLine) {
+                        max = docVals.redLine;
+                    }
+                });    
+                const ref = fb.db.doc(rest+'/'+restID+'/WarehouseStock/'+rawMaterial);
+                ref.get()
+                .then((doc) => {
+                if(doc) {
+                    return doc.data().value;
+                }
+                }).then(data => {
+                    ref.update({
+                        value : {
+                            amount : data.amount,
+                            redLine : max,
+                            type : data.type,
+                            unit : data.unit,
+                            name : data.name
+                        }
+                    }).then(func => {
+                        console.log('updated redLine'); 
+                        return 0
+                    });
+                })
+            }).catch(err => {
+              console.error(err);
+            });
     } catch(err) {
-        console.log(err);
-    }
+        console.error(err);
+    }    
 }

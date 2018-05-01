@@ -10,13 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
-exports.handler = function (change, context) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const rest = context.params.rest;
-            const restID = context.params.restID;
-            const rawMaterial = context.params.rawMaterial;
-            const docs = yield fb.getCol(rest + '/' + restID + '/WarehouseStock/' + rawMaterial + '/Meals');
+exports.handler = (change, context) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        const rest = context.params.rest;
+        const restID = context.params.restID;
+        const rawMaterial = context.params.rawMaterial;
+        fb.db.collection(rest + '/' + restID + '/WarehouseStock/' + rawMaterial + '/Meals')
+            .get()
+            .then(docs => {
             let max = 0;
             docs.forEach(doc => {
                 const docVals = doc.data();
@@ -24,31 +25,32 @@ exports.handler = function (change, context) {
                     max = docVals.redLine;
                 }
             });
-            let data;
             const ref = fb.db.doc(rest + '/' + restID + '/WarehouseStock/' + rawMaterial);
-            yield ref.get().then(function (doc) {
+            ref.get()
+                .then((doc) => {
                 if (doc) {
-                    data = doc.data().value;
+                    return doc.data().value;
                 }
+            }).then(data => {
+                ref.update({
+                    value: {
+                        amount: data.amount,
+                        redLine: max,
+                        type: data.type,
+                        unit: data.unit,
+                        name: data.name
+                    }
+                }).then(func => {
+                    console.log('updated redLine');
+                    return 0;
+                });
             });
-            ref.update({
-                value: {
-                    amount: data.amount,
-                    redLine: max,
-                    type: data.type,
-                    unit: data.unit,
-                    name: data.name
-                }
-            }).then(func => {
-                console.log('updated redLine');
-                return 0;
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-        catch (err) {
-            console.log(err);
-        }
-    });
-};
+        }).catch(err => {
+            console.error(err);
+        });
+    }
+    catch (err) {
+        console.error(err);
+    }
+});
 //# sourceMappingURL=redLine.js.map

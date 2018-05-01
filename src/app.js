@@ -7,16 +7,13 @@ var App = /** @class */ (function () {
     }
     App.prototype.shaharTests = function () {
         try {
-            var func_1 = this.helloTest;
             // Listen for any change on document and prints it's values
             // can send values to another functions or anything...
-            var unsubscribe = this.fb.db.doc('Customers/XYSD2ZCHf4P6RQY56vlga5h6CyE2')
-                .onSnapshot(function (doc) {
-                console.log("Current data: ", doc.data());
-                //run helloTest()
-                func_1();
-            }, function (err) {
-                console.log(err);
+            var unsubscribe = this.fb.db.collection('Customers')
+                .onSnapshot(function (docs) {
+                docs.forEach(function (doc) {
+                    console.log("Current data: ", doc.data());
+                });
             });
             //to stop listener run -> unsubscribe() **or any variable name that equal the listener;
         }
@@ -25,6 +22,7 @@ var App = /** @class */ (function () {
         }
     };
     App.prototype.danielLuzTests = function () {
+        var ref = this.fb.db.doc;
     };
     App.prototype.loraineTests = function () {
     };
