@@ -5,6 +5,8 @@ const amount = require('./amount');
 const redLine = require('./redLine');
 const registerToRest = require('./registerToRest');
 const missingChanged = require('./missingChanged');
+const deleteUser = require('./deleteUser');
+const createUser = require('./createUser');
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
 exports.registerToRest = fb.functions.https.onRequest((req, res) => {
@@ -31,6 +33,16 @@ exports.amount = fb.functions.firestore
 exports.redLine = fb.functions.firestore
     .document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onCreate((change, context) => {
     const val = redLine.handler(change, context);
+    return val;
+});
+exports.deleteUser = fb.functions.auth.user()
+    .onDelete((user) => {
+    const val = deleteUser.handler(user);
+    return val;
+});
+exports.createUser = fb.functions.auth.user()
+    .onCreate((user) => {
+    const val = createUser.handler(user);
     return val;
 });
 //# sourceMappingURL=index.js.map

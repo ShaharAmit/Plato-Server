@@ -1,9 +1,14 @@
 {
-    "compilerOptions": {
-        "module": "amd",
-        "target": "es6"
-    },
-    "exclude": [
-        "node_modules"
+  "compilerOptions": {
+      "rootDir": ".",
+      "module": "commonjs",
+      "target": "es6",
+      "lib": [
+        "es6"
     ]
+  },
+  "include": [
+      "src",
+      "services"
+  ]
 }

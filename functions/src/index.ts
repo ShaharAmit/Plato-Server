@@ -3,7 +3,8 @@ const amount = require('./amount');
 const redLine = require('./redLine');
 const registerToRest = require('./registerToRest');
 const missingChanged = require('./missingChanged');
-
+const deleteUser = require('./deleteUser');
+const createUser = require('./createUser');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -40,3 +41,14 @@ exports.redLine = fb.functions.firestore
     return val;
 });
 
+exports.deleteUser = fb.functions.auth.user()
+.onDelete((user) => {
+    const val = deleteUser.handler(user);
+    return val;
+});
+
+exports.createUser = fb.functions.auth.user()
+.onCreate((user) => {
+    const val = createUser.handler(user);
+    return val;
+});

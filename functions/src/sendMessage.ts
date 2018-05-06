@@ -1,7 +1,6 @@
-
 import * as firebase from '../lib/firebase.js'
 const fb = new firebase();
-exports.handler = async function(change, context) {
+exports.handler = async (change, context) =>{
     const restID = context.params.restID;
     const data = change.data();
     fb.messaging.sendToTopic(restID, 
@@ -10,7 +9,7 @@ exports.handler = async function(change, context) {
         body: data.body,
         click_action: data.url,
         icon: data.icon
-      }}).then(function(){
+      }}).then(() =>{
           console.log('succes');
           return 0;
       }).catch(err => {

@@ -10,19 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
-exports.handler = (change, context) => __awaiter(this, void 0, void 0, function* () {
-    const restID = context.params.restID;
-    const data = change.data();
-    fb.messaging.sendToTopic(restID, { notification: {
-            title: data.title,
-            body: data.body,
-            click_action: data.url,
-            icon: data.icon
-        } }).then(() => {
-        console.log('succes');
+exports.handler = (user) => __awaiter(this, void 0, void 0, function* () {
+    const ref = fb.db.doc('Users/' + user.uid).set({})
+        .then(() => {
+        console.log('user created');
         return 0;
     }).catch(err => {
         console.error(err);
+        return 0;
     });
 });
-//# sourceMappingURL=sendMessage.js.map
+//# sourceMappingURL=createUser.js.map

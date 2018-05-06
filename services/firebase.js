@@ -1,6 +1,5 @@
 var admin = require('firebase-admin');
 var serviceAccount = require('./config.json');
-var Promise = require('es6-promise');
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://plato-7fb01.firebaseio.com'
