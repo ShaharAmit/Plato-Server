@@ -28,7 +28,7 @@ class App {
     }
 
     loraineTests () {
-        
+        console.log('test')
     }
 
     danaIgraTests () {
