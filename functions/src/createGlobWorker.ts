@@ -15,8 +15,8 @@ exports.handler = async (change, context) => {
             email: data.email
         });
         
-        batch.set(ref.collection('/Rests/').doc(restID),{
-            rest: {[restID]: true}
+        batch.set(ref.collection('/Rest/').doc(restID),{
+            [restID]: true
         })
         
         batch.commit().then(() => {

@@ -15,9 +15,8 @@ function createUser(restID,rest,role,name,email,pass) {
             displayName: name,
             role: role 
         });
-        batch.set(ref.doc('Rests/'+rest),{
-            [rest]: true
-
+        batch.set(ref.doc('Rest/'+restID),{
+            [restID]: true
         });
         
         return batch.commit().then(() => {
@@ -53,8 +52,8 @@ exports.handler = async (data, context) => {
                 if(uidRole === 'superAdmin') {
                     return createUser(restID,rest,role,name,email,pass);
                 } else if(doc.data().docData.role==='admin') {
-                    ref.doc('Rests/'+rest).get().then((d => {
-                        if(d.data().rest) {
+                    ref.doc('Rest/'+restID).get().then((d => {
+                        if(d.data()[`${restID}`]) {
                             return createUser(restID,rest,role,name,email,pass);
                         };
                     })).catch(err => {

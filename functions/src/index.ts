@@ -4,7 +4,7 @@ const sendMessage = require('./sendMessage'),
     registerToRest = require('./registerToRest'),
     unRegisterToRest = require('./unRegisterToRest'),
     missingChanged = require('./missingChanged'),
-    deleteGlobWorkers = require('./deleteGlobWorkers'),
+    deleteGlobWorkers = require('./deleteGlobWorker'),
     createWorker = require('./createWorker'),
     createGlobWorker = require('./createGlobWorker'),
     addTableOrder = require('./addTableOrder'),
@@ -14,14 +14,14 @@ import * as firebase from '../lib/firebase.js'
 
 const fb = new firebase();
 
-exports.registerToRest = fb.firestore
+exports.registerToRest = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
     .onCreate((change,context)=> {
         const val = registerToRest.handler(change,context);
         return val;
     });
 
-exports.unRegisterToRest = fb.firestore
+exports.unRegisterToRest = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
     .onDelete((change,context)=> {
         const val = unRegisterToRest.handler(change,context);
@@ -54,7 +54,7 @@ exports.redLine = fb.functions.firestore
         return val;
     });
 
-exports.deleteGlobWorkers = fb.firestore
+exports.deleteGlobWorkers = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
     .onDelete((change,context)=> {
         const val = deleteGlobWorkers.handler(change,context);
@@ -66,7 +66,7 @@ exports.createWorker = fb.functions.https.onCall((data, context) => {
     return val;
 });
 
-exports.createGlobWorker = fb.firestore
+exports.createGlobWorker = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
     .onCreate((change,context)=> {
         const val = createGlobWorker.handler(change,context);
@@ -74,7 +74,7 @@ exports.createGlobWorker = fb.firestore
     });
 
 exports.addTableOrder = fb.functions.firestore
-    .doc('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onCreate((change, context) => {
+    .document('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onCreate((change, context) => {
         const val = addTableOrder.handler();
         return val;
     });
