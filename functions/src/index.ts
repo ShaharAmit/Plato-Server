@@ -1,26 +1,39 @@
-const sendMessage = require('./sendMessage');
-const amount = require('./amount');
-const redLine = require('./redLine');
-const registerToRest = require('./registerToRest');
-const missingChanged = require('./missingChanged');
-const deleteUser = require('./deleteUser');
-const createUser = require('./createUser');
+const sendMessage = require('./sendMessage'),
+    amount = require('./amount'),
+    redLine = require('./redLine'),
+    registerToRest = require('./registerToRest'),
+    unRegisterToRest = require('./unRegisterToRest'),
+    missingChanged = require('./missingChanged'),
+    deleteGlobWorkers = require('./deleteGlobWorkers'),
+    createWorker = require('./createWorker'),
+    createGlobWorker = require('./createGlobWorker'),
+    addTableOrder = require('./addTableOrder'),
+    testing = require('./testing');
 
 import * as firebase from '../lib/firebase.js'
 
 const fb = new firebase();
 
-exports.registerToRest = fb.functions.https.onRequest((req, res) => {
-    const val = registerToRest.handler(req, res);
-    return val;
-});
+exports.registerToRest = fb.firestore
+    .document('{rest}/{restID}/Workers/{uid}')
+    .onCreate((change,context)=> {
+        const val = registerToRest.handler(change,context);
+        return val;
+    });
+
+exports.unRegisterToRest = fb.firestore
+    .document('{rest}/{restID}/Workers/{uid}')
+    .onDelete((change,context)=> {
+        const val = unRegisterToRest.handler(change,context);
+        return val;
+    });
 
 exports.missingChanged = fb.functions.firestore
     .document('{rest}/{restID}/Meals/{mealName}')
     .onUpdate((change,context)=> {
         const val = missingChanged.handler(change,context);
         return val;
-    })
+    });
 
 exports.sendMessage = fb.functions.firestore
     .document('{rest}/{restID}/Messages/{messageID}')
@@ -30,25 +43,43 @@ exports.sendMessage = fb.functions.firestore
     });
 
 exports.amount = fb.functions.firestore
-.document('{rest}/{restID}/WarehouseStock/{rawMaterial}').onUpdate((change, context) => {
-    const val = amount.handler(change, context);
-    return val;
-});
+    .document('{rest}/{restID}/WarehouseStock/{rawMaterial}').onUpdate((change, context) => {
+        const val = amount.handler(change, context);
+        return val;
+    });
 
 exports.redLine = fb.functions.firestore
-.document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onCreate((change, context) => {
-    const val = redLine.handler(change, context);
+    .document('{rest}/{restID}/WarehouseStock/{rawMaterial}/Meals/{meal}').onCreate((change, context) => {
+        const val = redLine.handler(change, context);
+        return val;
+    });
+
+exports.deleteGlobWorkers = fb.firestore
+    .document('{rest}/{restID}/Workers/{uid}')
+    .onDelete((change,context)=> {
+        const val = deleteGlobWorkers.handler(change,context);
+        return val;
+    });
+
+exports.createWorker = fb.functions.https.onCall((data, context) => {
+    const val = createWorker.handler(data, context);
     return val;
 });
 
-exports.deleteUser = fb.functions.auth.user()
-.onDelete((user) => {
-    const val = deleteUser.handler(user);
-    return val;
-});
+exports.createGlobWorker = fb.firestore
+    .document('{rest}/{restID}/Workers/{uid}')
+    .onCreate((change,context)=> {
+        const val = createGlobWorker.handler(change,context);
+        return val;
+    });
 
-exports.createUser = fb.functions.auth.user()
-.onCreate((user) => {
-    const val = createUser.handler(user);
+exports.addTableOrder = fb.functions.firestore
+    .doc('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onCreate((change, context) => {
+        const val = addTableOrder.handler();
+        return val;
+    });
+
+exports.testing = fb.functions.https.onRequest((req, res) => {
+    const val = testing.handler(req, res);
     return val;
 });
