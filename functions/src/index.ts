@@ -8,6 +8,7 @@ const sendMessage = require('./sendMessage'),
     createWorker = require('./createWorker'),
     createGlobWorker = require('./createGlobWorker'),
     addTableOrder = require('./addTableOrder'),
+    addGrocery = require('./addGrocery'),
     testing = require('./testing');
 
 import * as firebase from '../lib/firebase.js'
@@ -81,5 +82,10 @@ exports.addTableOrder = fb.functions.firestore
 
 exports.testing = fb.functions.https.onRequest((req, res) => {
     const val = testing.handler(req, res);
+    return val;
+});
+
+exports.addGrocery = fb.functions.https.onCall((data, context) => {
+    const val = addGrocery.handler(data, context);
     return val;
 });

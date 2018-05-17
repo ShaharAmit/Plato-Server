@@ -25,6 +25,7 @@ var App = /** @class */ (function () {
         var ref = this.fb.db.doc;
     };
     App.prototype.loraineTests = function () {
+        console.log('test');
     };
     App.prototype.danaIgraTests = function () {
     };
