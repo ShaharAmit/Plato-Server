@@ -2,9 +2,9 @@ import * as firebase from '../lib/firebase.js'
 const fb = new firebase();
 exports.handler = async (change, context) => {
     try {
-        const rest = context.params.rest;
-        const restID = context.params.restID;
-        const rawMaterial = context.params.rawMaterial
+        const rest = context.params.rest,
+            restID = context.params.restID,
+            rawMaterial = context.params.rawMaterial;
         fb.db.collection(rest+'/'+restID+'/WarehouseStock/'+rawMaterial+'/Meals')
             .get()
             .then(docs => {
