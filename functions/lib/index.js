@@ -7,6 +7,7 @@ const registerToRest = require('./registerToRest');
 const missingChanged = require('./missingChanged');
 const deleteUser = require('./deleteUser');
 const createUser = require('./createUser');
+const updateDishStatus = require('./updateDishStatus');
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
 exports.registerToRest = fb.functions.https.onRequest((req, res) => {
@@ -43,6 +44,14 @@ exports.deleteUser = fb.functions.auth.user()
 exports.createUser = fb.functions.auth.user()
     .onCreate((user) => {
     const val = createUser.handler(user);
+    return val;
+});
+// exports.updateDishStatus = fb.functions.https.onRequest((req, res) => {
+//     const val = updateDishStatus.handler(req,res);
+//     res.send("done");
+// });
+exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
+    const val = updateDishStatus.handler(change, context);
     return val;
 });
 //# sourceMappingURL=index.js.map
