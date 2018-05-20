@@ -3,9 +3,9 @@ const fb = new firebase();
 function writeMessages(missing, rest, restID, mealName,url,icon) {
     const batch = fb.db.batch();
     for(const rawMaterial of missing) {
-        batch.set(fb.db.doc(rest+'/'+restID+'/Messages/'+mealName),{
-            title: restID,
-            body: mealName + ' missing ' + rawMaterial,
+        batch.set(fb.db.collection(rest+'/'+restID+'/Messages/').doc(),{
+            title: mealName,
+            body: rawMaterial + ' is missing',
             url:  url,
             icon: icon        
         });
@@ -16,11 +16,31 @@ function writeMessages(missing, rest, restID, mealName,url,icon) {
 function removeMessages(bMissing, rest, restID, mealName) {
     const batch = fb.db.batch();
     for(const rawMaterial of bMissing) {
-        batch.delete(fb.db.doc(rest+'/'+restID+'/Messages/'+mealName));
+        //checking if body starts with 'raMaterial'
+        const strFrontCode = rawMaterial.slice(0, rawMaterial.length-1),
+            strEndCode = rawMaterial.slice(rawMaterial.length-1, rawMaterial.length);
+        let endcode;
+            if(strEndCode==='z') {
+                endcode = rawMaterial + 'a';
+            } else {
+                endcode = strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
+            }
+        fb.db.collection(rest+'/'+restID+'/Messages').where("title", "==", mealName).where("body",">=",rawMaterial).where("body","<=",endcode)
+        .get().then(docs => {
+            docs.forEach(doc => {
+                batch.delete(doc.ref);
+              });
+        }).then(() => {
+            return batch.commit().then(() => {console.log('messages removed')}).catch(err => console.log(err));
+        })
+        .catch(err => {
+            console.error(err);
+        })
     }
-    return batch.commit().then(() => {console.log('messages removed')}).catch(err => console.log(err));
+    return 0;
 }
 
+//adding and deleting messages according to missing raw materials
 exports.handler = async (change, context) => {
     try {
         const before = change.before.data(),
@@ -37,25 +57,31 @@ exports.handler = async (change, context) => {
             if(bMissing) {
                 if(aMissing) {
                     let aMissingArr = Object.keys(aMissing);
-                    let bMissingArr = Object.keys(bMissing)
+                    let bMissingArr = Object.keys(bMissing);
+                    //checking if old missing array is smaller than new
                     if(aMissingArr.length > bMissingArr.length) {
                         aMissingArr = await aMissingArr.filter( ( el ) => !bMissingArr.includes( el ) );
                         const val = await writeMessages(aMissingArr, rest, restID, mealName, url, icon);
                         return val;
                     } else {
                         bMissingArr = await bMissingArr.filter( ( el ) => !aMissingArr.includes( el ) );
-                        const val = await writeMessages(bMissingArr, rest, restID, mealName, url, icon);
+                        const val = await removeMessages(bMissingArr, rest, restID, mealName);
                         return val;
                     }
-                    
                 }
             } else if (aMissing) {
                 const aMissingArr = Object.keys(aMissing);
-                const val = await writeMessages(aMissingArr, rest, restID, mealName, url, icon);
-                return val;
+                if(aMissingArr.length>0) {
+                    //if newley created, check if new missing array is bigger then 0
+                    const val = await writeMessages(aMissingArr, rest, restID, mealName, url, icon);
+                    return val;
+                } else {
+                    return 0;
+                }
             } else {
                 return 0;
             }
+            //if missing is deleted completley, check if before is exist
         } else if (before) {
             const bMissing = before.missing;
             const bMissingArr = Object.keys(bMissing);

@@ -11,7 +11,10 @@ const sendMessage = require('./sendMessage'),
     addGrocery = require('./addGrocery'),
     deleteGrocery = require( './deleteGrocery'),
     updateGrocery = require( './updateGrocery'),
-    testing = require('./testing');
+    testing = require('./testing'),
+    dishOrdered = require('./dishOrdered'),
+    groceryBackToMenu = require('./groceryBackToMenu');
+
 
 import * as firebase from '../lib/firebase.js'
 
@@ -64,11 +67,6 @@ exports.deleteGlobWorkers = fb.functions.firestore
         return val;
     });
 
-exports.createWorker = fb.functions.https.onCall((data, context) => {
-    const val = createWorker.handler(data, context);
-    return val;
-});
-
 exports.createGlobWorker = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
     .onCreate((change,context)=> {
@@ -78,9 +76,22 @@ exports.createGlobWorker = fb.functions.firestore
 
 exports.addTableOrder = fb.functions.firestore
     .document('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onCreate((change, context) => {
-        const val = addTableOrder.handler();
+        const val = addTableOrder.handler(change, context);
         return val;
     });
+
+exports.dishOrdered = fb.functions.firestore
+    .document('{rest}/{restID}/Orders/{orderID}/meals/{mealID}/dishes/{dish}').onWrite((change, context) => {
+        const val = dishOrdered.handler(change, context);
+        return val;
+    });
+
+
+exports.groceryBackToMenu = fb.functions.firestore
+.document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
+    const val = groceryBackToMenu.handler(change, context);
+    return val;
+});
 
 exports.testing = fb.functions.https.onRequest((req, res) => {
     const val = testing.handler(req, res);
@@ -99,5 +110,10 @@ exports.deleteGrocery = fb.functions.https.onCall((data, context) => {
 
 exports.updateGrocery = fb.functions.https.onCall((data, context) => {
     const val = updateGrocery.handler(data, context);
+    return val;
+});
+
+exports.createWorker = fb.functions.https.onCall((data, context) => {
+    const val = createWorker.handler(data, context);
     return val;
 });

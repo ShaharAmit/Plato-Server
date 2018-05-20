@@ -6,7 +6,7 @@ exports.handler = async (change, context) => {
         uid = context.params.uid;
         
     fb.messaging.subscribeToTopic(uid,rest).then(() => {
-        return true;
+        return 0;
     });
  }
 
