@@ -13,7 +13,8 @@ const sendMessage = require('./sendMessage'),
     updateGrocery = require( './updateGrocery'),
     testing = require('./testing'),
     dishOrdered = require('./dishOrdered'),
-    groceryBackToMenu = require('./groceryBackToMenu');
+    groceryBackToMenu = require('./groceryBackToMenu'),
+    updateDishStatus = require('./updateDishStatus');
 
 
 import * as firebase from '../lib/firebase.js'
@@ -22,28 +23,28 @@ const fb = new firebase();
 
 exports.registerToRest = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
-    .onCreate((change,context)=> {
-        const val = registerToRest.handler(change,context);
+    .onCreate((change, context) => {
+        const val = registerToRest.handler(change, context);
         return val;
     });
 
 exports.unRegisterToRest = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
-    .onDelete((change,context)=> {
-        const val = unRegisterToRest.handler(change,context);
+    .onDelete((change, context) => {
+        const val = unRegisterToRest.handler(change, context);
         return val;
     });
 
 exports.missingChanged = fb.functions.firestore
     .document('{rest}/{restID}/Meals/{mealName}')
-    .onUpdate((change,context)=> {
-        const val = missingChanged.handler(change,context);
+    .onUpdate((change, context) => {
+        const val = missingChanged.handler(change, context);
         return val;
     });
 
 exports.sendMessage = fb.functions.firestore
     .document('{rest}/{restID}/Messages/{messageID}')
-    .onCreate((change,context) => {
+    .onCreate((change, context) => {
         const val = sendMessage.handler(change, context);
         return val;
     });
@@ -62,15 +63,15 @@ exports.redLine = fb.functions.firestore
 
 exports.deleteGlobWorkers = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
-    .onDelete((change,context)=> {
-        const val = deleteGlobWorkers.handler(change,context);
+    .onDelete((change, context) => {
+        const val = deleteGlobWorkers.handler(change, context);
         return val;
     });
 
 exports.createGlobWorker = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
-    .onCreate((change,context)=> {
-        const val = createGlobWorker.handler(change,context);
+    .onCreate((change, context) => {
+        const val = createGlobWorker.handler(change, context);
         return val;
     });
 
@@ -86,10 +87,14 @@ exports.dishOrdered = fb.functions.firestore
         return val;
     });
 
-
 exports.groceryBackToMenu = fb.functions.firestore
 .document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
     const val = groceryBackToMenu.handler(change, context);
+    return val;
+});
+
+exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
+    const val = updateDishStatus.handler(change, context);
     return val;
 });
 
