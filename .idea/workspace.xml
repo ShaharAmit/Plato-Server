@@ -243,7 +243,7 @@
       <updated>1526490915322</updated>
       <workItem from="1526490916702" duration="15009000" />
       <workItem from="1526647550451" duration="204000" />
-      <workItem from="1526647809318" duration="9204000" />
+      <workItem from="1526647809318" duration="9695000" />
     </task>
     <task id="LOCAL-00001" summary="add addGrocery service">
       <created>1526562828709</created>
@@ -263,11 +263,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24417000" />
+    <option name="totallyTimeSpent" value="24908000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TypeScript" order="7" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
