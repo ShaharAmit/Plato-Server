@@ -12,8 +12,11 @@ const firebase = require("../lib/firebase.js");
 const fb = new firebase();
 exports.handler = (change, context) => __awaiter(this, void 0, void 0, function* () {
     const rest = context.params.rest, uid = context.params.uid;
-    fb.messaging.subscribeToTopic(uid, rest).then(() => {
-        return true;
+    fb.messaging.unsubscribeFromTopic(uid, rest).then(() => {
+        return 0;
+    }).catch(err => {
+        console.error(err);
+        return 0;
     });
 });
-//# sourceMappingURL=registerToRest.js.map
+//# sourceMappingURL=unRegisterToRest.js.map

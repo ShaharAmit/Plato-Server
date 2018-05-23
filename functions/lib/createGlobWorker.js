@@ -11,9 +11,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
 exports.handler = (change, context) => __awaiter(this, void 0, void 0, function* () {
-    const rest = context.params.rest, uid = context.params.uid;
-    fb.messaging.subscribeToTopic(uid, rest).then(() => {
-        return true;
+    const rest = context.params.rest, restID = context.params.restID, uid = context.params.uid, data = change.data(), ref = fb.db.doc('GlobWorkers/' + uid), batch = fb.db.batch();
+    batch.set(ref, {
+        name: data.name,
+        role: data.role,
+        email: data.email
+    });
+    batch.set(ref.collection('/Rest/').doc(restID), {
+        [restID]: true
+    });
+    batch.commit().then(() => {
+        console.log('created user: ', uid);
+        return 0;
+    }).catch(err => {
+        console.error(err);
+        return 0;
     });
 });
-//# sourceMappingURL=registerToRest.js.map
+//# sourceMappingURL=createGlobWorker.js.map
