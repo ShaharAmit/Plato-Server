@@ -13,6 +13,7 @@ const sendMessage = require('./sendMessage'),
     updateGrocery = require( './updateGrocery'),
     addDish = require( './addDish'),
     addMeal = require( './addMeal'),
+    addKitchenStation = require( './addKitchenStation'),
     testing = require('./testing');
 
 import * as firebase from '../lib/firebase.js'
@@ -111,5 +112,10 @@ exports.addDish = fb.functions.https.onCall((data, context) => {
 
 exports.addMeal = fb.functions.https.onCall((data, context) => {
     const val = addMeal.handler(data, context);
+    return val;
+});
+
+exports.addKitchenStation = fb.functions.https.onCall((data, context) => {
+    const val = addKitchenStation.handler(data, context);
     return val;
 });
