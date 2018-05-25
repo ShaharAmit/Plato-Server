@@ -1,11 +1,13 @@
 var firebase1 = require('../services/firebase.js');
-const Promise = require('es6-promise');
+// const Promise = require('es6-promise');
 
 class App {
     fb: any;
     constructor() {
         this.fb = new firebase1();
-        this.shaharTests();
+        //this.shaharTests();
+        this.danaIgraTests();
+        // this.test123();
     }
     shaharTests() {
         try {
@@ -32,6 +34,21 @@ class App {
     }
 
     danaIgraTests () {
+        console.log("start dana func");
+         let req :{
+              query: {
+                path: "/RestAlfa/kibutz-222/Orders/1524998020/meals/j55652Oakv7jc3f6Iogh/dishes/Burger"
+            }
+        }
+        const dish = this.fb.db.doc(req.query.path);
+        dish.update({
+         status: 2,
+        }).then(()=>{
+            console.log("dish changed");
+        }).catch(err=>{
+            console.log("err");
+        });
+
         
     }
 
@@ -43,6 +60,9 @@ class App {
         console.log('hey');
     }
 
+    test123() {
+        console.log('12');
+    }
 }
 module.exports = App;
 new App();
