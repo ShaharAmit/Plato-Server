@@ -12,7 +12,8 @@ const sendMessage = require('./sendMessage'),
     deleteGrocery = require('./deleteGrocery'),
     updateGrocery = require('./updateGrocery'),
     testing = require('./testing'),
-    updateDishStatus = require('./updateDishStatus');
+    updateDishStatus = require('./updateDishStatus'),
+    getDishesForKitchen = require('./getDishesForKitchen');
 
 
 import * as firebase from '../lib/firebase.js'
@@ -106,5 +107,10 @@ exports.updateGrocery = fb.functions.https.onCall((data, context) => {
 
 exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
     const val = updateDishStatus.handler(change, context);
+    return val;
+});
+
+exports.getDishesForKitchen = fb.functions.https.onCall((data, context) => {
+    const val = getDishesForKitchen.handler(data, context);
     return val;
 });
