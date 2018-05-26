@@ -15,19 +15,23 @@ exports.handler = (data, context) => {
 
     const restId = data.restId;
     const orders = {};
+    let ordersCount = 0;
+    let ordersInitialized = 0;
+    return new Promise((resolve, reject) => {
 
-    fb.db.collection(`/RestAlfa/${restId}/Orders`).get().then(ordersQuerySnapshot => {
+        fb.db.collection(`/RestAlfa/${restId}/Orders`).get().then(ordersQuerySnapshot => {
 
-        ordersQuerySnapshot.forEach(orderQueryDocSnapshot => {
-            orders[orderQueryDocSnapshot.id] = {
-                dishes: {}
-            };
-        });
+            ordersQuerySnapshot.forEach(orderQueryDocSnapshot => {
+                orders[orderQueryDocSnapshot.id] = {
+                    dishes: {}
+                };
+                ordersCount++;
+            });
+            console.log('orders count', ordersCount);
 
-        for (let orderDoc of ordersQuerySnapshot.docs) {
-            fb.db.collection(`${orderDoc.ref.path}/meals`).get().then(mealsQuerySnapshot => {
-                for (let mealDoc of mealsQuerySnapshot.docs) {
-                    new Promise((resolve, reject) => {
+            for (let orderDoc of ordersQuerySnapshot.docs) {
+                fb.db.collection(`${orderDoc.ref.path}/meals`).get().then(mealsQuerySnapshot => {
+                    for (let mealDoc of mealsQuerySnapshot.docs) {
                         fb.db.collection(`${mealDoc.ref.path}/dishes`).get().then(dishesQuerySnapshot => {
                             dishesQuerySnapshot.forEach(dishQueryDocSnapshot => {
                                 const dish = dishQueryDocSnapshot.data();
@@ -42,13 +46,17 @@ exports.handler = (data, context) => {
                                 return value.totalSeconds > max.seconds ? { seconds: value.totalSeconds, dishId } : max;
                             }, { seconds: 0, dishId: '' });
                             orders[orderDoc.id].longestDishTime = longestDishTime;
-                            resolve(orders);
+
+                            ordersInitialized++;
+                            console.log('order initialized', ordersInitialized);
+                            if (ordersInitialized === ordersCount) {
+                                console.log('resolving');
+                                resolve(orders);
+                            }
                         })
-                    }).then(x => {
-                        return x;
-                    })
-                }
-            })
-        }
+                    }
+                })
+            }
+        });
     });
 };
