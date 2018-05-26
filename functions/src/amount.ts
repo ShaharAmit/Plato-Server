@@ -2,15 +2,15 @@ import * as firebase from '../lib/firebase.js'
 const fb = new firebase();
 exports.handler = async (change, context) => {
     try {
-        const before = change.before.data();
-        const after = change.after.data();
+        const before = change.before.data(),
+            after = change.after.data();
         if(before && after) {
-            const rest = context.params.rest;
-            const restID = context.params.restID;
-            const rawMaterial = context.params.rawMaterial
-            const bAmn = before.value.amount;
-            const aAmn = after.value.amount;
-            const redLine = after.value.redLine;            
+            const rest = context.params.rest,
+                restID = context.params.restID,
+                rawMaterial = context.params.rawMaterial,
+                bAmn = before.value.amount,
+                aAmn = after.value.amount,
+                redLine = after.value.redLine;            
             fb.db.collection(rest+'/'+restID+'/WarehouseStock/'+rawMaterial+'/Meals').get().then((docs) =>{
                 //the amount went down
                 if(bAmn < aAmn) {
@@ -33,6 +33,12 @@ exports.handler = async (change, context) => {
                         const docVals = doc.data();
                         const docID = doc.id;
                         if(parseFloat(docVals.redLine) >= aAmn && docVals.importance && docVals.menu) {
+                            batch.set(fb.db.doc(rest+'/'+restID+'/Meals/'+docID),{
+                                missing: {[rawMaterial]: true},
+                                displayed: false
+                            },{ merge: true });
+                            batch.update(fb.db.doc(rest+'/'+restID+'/WarehouseStock/'+rawMaterial+'/Meals/'+docID),{menu : false});
+                        } else if (parseFloat(docVals.redLine) >= aAmn && docVals.menu) {
                             batch.set(fb.db.doc(rest+'/'+restID+'/Meals/'+docID),{missing: {[rawMaterial]: true}},{ merge: true });
                             batch.update(fb.db.doc(rest+'/'+restID+'/WarehouseStock/'+rawMaterial+'/Meals/'+docID),{menu : false});
                         }

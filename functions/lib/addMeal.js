@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
-exports.handler = (change, context) => __awaiter(this, void 0, void 0, function* () {
-    const rest = context.params.rest, uid = context.params.uid;
-    fb.messaging.subscribeToTopic(uid, rest).then(() => {
-        return true;
-    });
+exports.handler = (data, context) => __awaiter(this, void 0, void 0, function* () {
+    console.log('restId: ', data.restId);
+    fb.db.collection('RestAlfa' + '/' + data.restId + '/Meals/').doc(data.meal.name)
+        .set(data.meal);
+    console.log('add meal is working');
 });
-//# sourceMappingURL=registerToRest.js.map
+//# sourceMappingURL=addMeal.js.map

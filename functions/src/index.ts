@@ -11,10 +11,14 @@ const sendMessage = require('./sendMessage'),
     addGrocery = require('./addGrocery'),
     deleteGrocery = require('./deleteGrocery'),
     updateGrocery = require('./updateGrocery'),
+    addDish = require('./addDish'),
+    addMeal = require('./addMeal'),
+    addKitchenStation = require('./addKitchenStation'),
     testing = require('./testing'),
     updateDishStatus = require('./updateDishStatus'),
-    getDishesForKitchen = require('./getDishesForKitchen');
-
+    getDishesForKitchen = require('./getDishesForKitchen'),
+    dishOrdered = require('./dishOrdered'),
+    groceryBackToMenu = require('./groceryBackToMenu');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -67,11 +71,6 @@ exports.deleteGlobWorkers = fb.functions.firestore
         return val;
     });
 
-exports.createWorker = fb.functions.https.onCall((data, context) => {
-    const val = createWorker.handler(data, context);
-    return val;
-});
-
 exports.createGlobWorker = fb.functions.firestore
     .document('{rest}/{restID}/Workers/{uid}')
     .onCreate((change, context) => {
@@ -81,9 +80,26 @@ exports.createGlobWorker = fb.functions.firestore
 
 exports.addTableOrder = fb.functions.firestore
     .document('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onCreate((change, context) => {
-        const val = addTableOrder.handler();
+        const val = addTableOrder.handler(change, context);
         return val;
     });
+
+exports.dishOrdered = fb.functions.firestore
+    .document('{rest}/{restID}/Orders/{orderID}/meals/{mealID}/dishes/{dish}').onWrite((change, context) => {
+        const val = dishOrdered.handler(change, context);
+        return val;
+    });
+
+exports.groceryBackToMenu = fb.functions.firestore
+    .document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
+        const val = groceryBackToMenu.handler(change, context);
+        return val;
+    });
+
+exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
+    const val = updateDishStatus.handler(change, context);
+    return val;
+});
 
 exports.testing = fb.functions.https.onRequest((req, res) => {
     const val = testing.handler(req, res);
@@ -105,12 +121,28 @@ exports.updateGrocery = fb.functions.https.onCall((data, context) => {
     return val;
 });
 
-exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
-    const val = updateDishStatus.handler(change, context);
+exports.addDish = fb.functions.https.onCall((data, context) => {
+    const val = addDish.handler(data, context);
     return val;
 });
 
+exports.addMeal = fb.functions.https.onCall((data, context) => {
+    const val = addMeal.handler(data, context);
+    return val;
+});
+
+
 exports.getDishesForKitchen = fb.functions.https.onCall((data, context) => {
     const val = getDishesForKitchen.handler(data, context);
+    return val;
+});
+
+exports.addKitchenStation = fb.functions.https.onCall((data, context) => {
+    const val = addKitchenStation.handler(data, context);
+    return val;
+});
+
+exports.createWorker = fb.functions.https.onCall((data, context) => {
+    const val = createWorker.handler(data, context);
     return val;
 });

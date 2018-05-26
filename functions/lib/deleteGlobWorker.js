@@ -11,9 +11,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const firebase = require("../lib/firebase.js");
 const fb = new firebase();
 exports.handler = (change, context) => __awaiter(this, void 0, void 0, function* () {
-    const rest = context.params.rest, uid = context.params.uid;
-    fb.messaging.subscribeToTopic(uid, rest).then(() => {
-        return true;
+    const uid = context.params.uid;
+    const ref = fb.db.doc('GlobWorkers/' + uid).delete()
+        .then(() => {
+        console.log(uid + ': worker deleted');
+        return 0;
+    }).catch(err => {
+        console.error(err);
+        return 0;
     });
 });
-//# sourceMappingURL=registerToRest.js.map
+//# sourceMappingURL=deleteGlobWorker.js.map

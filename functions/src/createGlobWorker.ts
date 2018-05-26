@@ -25,7 +25,7 @@ exports.handler = async (change, context) => {
         }).catch(err => {
         console.error(err);
         return 0;
-    })
+    });
  }
 
  
