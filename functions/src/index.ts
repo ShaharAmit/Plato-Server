@@ -9,13 +9,17 @@ const sendMessage = require('./sendMessage'),
     createGlobWorker = require('./createGlobWorker'),
     addTableOrder = require('./addTableOrder'),
     addGrocery = require('./addGrocery'),
-    deleteGrocery = require( './deleteGrocery'),
-    updateGrocery = require( './updateGrocery'),
+    deleteGrocery = require('./deleteGrocery'),
+    updateGrocery = require('./updateGrocery'),
+    addDish = require('./addDish'),
+    addMeal = require('./addMeal'),
+    addKitchenStation = require('./addKitchenStation'),
     testing = require('./testing'),
     mealOrdered = require('./mealOrdered'),
     groceryBackToMenu = require('./groceryBackToMenu'),
-    updateDishStatus = require('./updateDishStatus');
-
+    updateDishStatus = require('./updateDishStatus'),
+    getDishesForKitchen = require('./getDishesForKitchen'),
+    dishOrdered = require('./dishOrdered');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -87,10 +91,10 @@ exports.mealOrdered = fb.functions.firestore
     });
 
 exports.groceryBackToMenu = fb.functions.firestore
-.document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
-    const val = groceryBackToMenu.handler(change, context);
-    return val;
-});
+    .document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
+        const val = groceryBackToMenu.handler(change, context);
+        return val;
+    });
 
 exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
     const val = updateDishStatus.handler(change, context);
@@ -114,6 +118,27 @@ exports.deleteGrocery = fb.functions.https.onCall((data, context) => {
 
 exports.updateGrocery = fb.functions.https.onCall((data, context) => {
     const val = updateGrocery.handler(data, context);
+    return val;
+});
+
+exports.addDish = fb.functions.https.onCall((data, context) => {
+    const val = addDish.handler(data, context);
+    return val;
+});
+
+exports.addMeal = fb.functions.https.onCall((data, context) => {
+    const val = addMeal.handler(data, context);
+    return val;
+});
+
+
+exports.getDishesForKitchen = fb.functions.https.onCall((data, context) => {
+    const val = getDishesForKitchen.handler(data, context);
+    return val;
+});
+
+exports.addKitchenStation = fb.functions.https.onCall((data, context) => {
+    const val = addKitchenStation.handler(data, context);
     return val;
 });
 
