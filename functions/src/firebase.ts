@@ -16,6 +16,7 @@ class FirebaseInitialize {
     messaging;
     auth;
     bq;
+    fieldValue;
     constructor() {
         this.functions = functions;
         this.admin = admin;
@@ -25,6 +26,7 @@ class FirebaseInitialize {
         this.bq = new BigQuery({
             projectId: 'plato-9a79e',
         });
+        this.fieldValue = this.db.FieldValue;
     }
 }
 module.exports = FirebaseInitialize;

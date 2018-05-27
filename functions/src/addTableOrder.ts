@@ -5,13 +5,17 @@ exports.handler = async (change, context) => {
     const restID = context.params.restID,
         orderID = context.params.order,
         rest = context.params.rest,
+        tableID = context.params.tableID,
+
         data = change.data();
-    const tableID = data.tableID,
+        console.log(data);
+        const
         customerID = data.orderedBy,
         instantOrder = data.instantOrder,
         timeStamp = data.date,
+
         table = fb.bq.dataset('predictions').table('table_orders');
-    console.log(tableID);
+
     fb.db.doc(rest+'/'+restID+'/Tables/'+tableID).get()
         .then(docData => {
             return docData.data().size;

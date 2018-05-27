@@ -12,7 +12,7 @@ const sendMessage = require('./sendMessage'),
     deleteGrocery = require( './deleteGrocery'),
     updateGrocery = require( './updateGrocery'),
     testing = require('./testing'),
-    dishOrdered = require('./dishOrdered'),
+    mealOrdered = require('./mealOrdered'),
     groceryBackToMenu = require('./groceryBackToMenu'),
     updateDishStatus = require('./updateDishStatus');
 
@@ -80,10 +80,9 @@ exports.addTableOrder = fb.functions.firestore
         const val = addTableOrder.handler(change, context);
         return val;
     });
-
-exports.dishOrdered = fb.functions.firestore
-    .document('{rest}/{restID}/Orders/{orderID}/meals/{mealID}/dishes/{dish}').onWrite((change, context) => {
-        const val = dishOrdered.handler(change, context);
+exports.mealOrdered = fb.functions.firestore
+    .document('{rest}/{restID}/Orders/{orderID}/meals/{mealID}').onWrite((change, context) => {
+        const val = mealOrdered.handler(change, context);
         return val;
     });
 

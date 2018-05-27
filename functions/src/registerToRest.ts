@@ -5,8 +5,10 @@ exports.handler = async (change, context) => {
     const rest = context.params.rest,
         uid = context.params.uid;
         
-    fb.messaging.subscribeToTopic(uid,rest).then(() => {
-        return 0;
+    return fb.messaging.subscribeToTopic(uid,rest).then(response => {
+        console.log('Successfully subscribed to topic:', response);
+    }).catch(err => {
+        console.log('Error subscribing to topic:', err);
     });
  }
 
