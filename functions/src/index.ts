@@ -19,7 +19,8 @@ const sendMessage = require('./sendMessage'),
     groceryBackToMenu = require('./groceryBackToMenu'),
     updateDishStatus = require('./updateDishStatus'),
     getDishesForKitchen = require('./getDishesForKitchen'),
-    dishOrdered = require('./dishOrdered');
+    dishOrdered = require('./dishOrdered'),
+    addRest = require('./addRest');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -144,5 +145,10 @@ exports.addKitchenStation = fb.functions.https.onCall((data, context) => {
 
 exports.createWorker = fb.functions.https.onCall((data, context) => {
     const val = createWorker.handler(data, context);
+    return val;
+});
+
+exports.addRest = fb.functions.https.onCall((data, context) => {
+    const val = addRest.handler(data, context);
     return val;
 });
