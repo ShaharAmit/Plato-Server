@@ -27,13 +27,8 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     testing = require('./testing'),
     mealOrdered = require('./shahar/orders/mealOrdered'),
     updateDishStatus = require('./updateDishStatus'),
-<<<<<<< HEAD
-    getDishesForKitchen = require('./getDishesForKitchen');
-=======
     getDishesForKitchen = require('./getDishesForKitchen'),
-    dishOrdered = require('./dishOrdered'),
     addRest = require('./addRest');
->>>>>>> a4e71cfd38a9ef70dfa232ff4e8ddbdbebdb2657
 
     
 import * as firebase from '../lib/firebase.js'
