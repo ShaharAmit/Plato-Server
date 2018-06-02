@@ -1,13 +1,23 @@
-const sendMessage = require('./sendMessage'),
-    amount = require('./amount'),
-    redLine = require('./redLine'),
-    registerToRest = require('./registerToRest'),
-    unRegisterToRest = require('./unRegisterToRest'),
-    missingChanged = require('./missingChanged'),
-    deleteGlobWorkers = require('./deleteGlobWorker'),
-    createWorker = require('./createWorker'),
-    createGlobWorker = require('./createGlobWorker'),
-    addTableOrder = require('./addTableOrder'),
+const sendMessage = require('./shahar/customers/sendMessage'),
+    registerToRest = require('./shahar/customers/registerToRest'),
+    unRegisterToRest = require('./shahar/customers/unRegisterToRest'),
+    deleteGlobWorkers = require('./shahar/customers/deleteGlobWorker'),
+    createWorker = require('./shahar/customers/createWorker'),
+    createGlobWorker = require('./shahar/customers/createGlobWorker'),
+
+    amount = require('./shahar/meals/amount'),
+    redLine = require('./shahar/meals/redLine'),
+    missingChanged = require('./shahar/meals/missingChanged'),
+    groceryBackToMenu = require('./shahar/meals/groceryBackToMenu'),
+
+    addTableOrder = require('./shahar/orders/addTableOrder'),
+    checkOrders = require('./shahar/orders/checkOrders'),
+
+    checkUTC = require('./shahar/rest/checkUTC'),
+    restsCounterDelete = require('./shahar/rest/restsCounterDelete'),
+    restsCounterCreate = require('./shahar/rest/restsCounterCreate'),
+
+
     addGrocery = require('./addGrocery'),
     deleteGrocery = require('./deleteGrocery'),
     updateGrocery = require('./updateGrocery'),
@@ -15,12 +25,11 @@ const sendMessage = require('./sendMessage'),
     addMeal = require('./addMeal'),
     addKitchenStation = require('./addKitchenStation'),
     testing = require('./testing'),
-    mealOrdered = require('./mealOrdered'),
-    groceryBackToMenu = require('./groceryBackToMenu'),
+    mealOrdered = require('./shahar/orders/mealOrdered'),
     updateDishStatus = require('./updateDishStatus'),
-    getDishesForKitchen = require('./getDishesForKitchen'),
-    dishOrdered = require('./dishOrdered');
+    getDishesForKitchen = require('./getDishesForKitchen');
 
+    
 import * as firebase from '../lib/firebase.js'
 
 const fb = new firebase();
@@ -79,6 +88,18 @@ exports.createGlobWorker = fb.functions.firestore
         return val;
     });
 
+exports.restsCounterCreate = fb.functions.firestore
+    .document('{rest}/{restID}').onCreate((change, context) => {
+        const val = restsCounterCreate.handler(change, context);
+        return val;
+    });
+
+exports.restsCounterDelete = fb.functions.firestore
+    .document('{rest}/{restID}').onDelete((change, context) => {
+        const val = restsCounterDelete.handler(change, context);
+        return val;
+    });
+
 exports.addTableOrder = fb.functions.firestore
     .document('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onCreate((change, context) => {
         const val = addTableOrder.handler(change, context);
@@ -94,15 +115,25 @@ exports.groceryBackToMenu = fb.functions.firestore
     .document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
         const val = groceryBackToMenu.handler(change, context);
         return val;
-    });
+    });   
 
 exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
     const val = updateDishStatus.handler(change, context);
     return val;
 });
 
+exports.checkUTC = fb.functions.https.onRequest((req, res) => {
+    const val = checkUTC.handler(req, res);
+    return val;
+});
+
 exports.testing = fb.functions.https.onRequest((req, res) => {
     const val = testing.handler(req, res);
+    return val;
+});
+
+exports.checkOrders = fb.functions.https.onRequest((req, res) => {
+    const val = checkOrders.handler(req, res);
     return val;
 });
 
@@ -130,7 +161,6 @@ exports.addMeal = fb.functions.https.onCall((data, context) => {
     const val = addMeal.handler(data, context);
     return val;
 });
-
 
 exports.getDishesForKitchen = fb.functions.https.onCall((data, context) => {
     const val = getDishesForKitchen.handler(data, context);

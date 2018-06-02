@@ -1,25 +1,23 @@
-var firebase1 = require('../services/firebase.js');
-// const Promise = require('es6-promise');
+var firebase1 = require('../services/firebase.js'),
+request = require('request');
+import {Promise} from 'es6-promise';
+
 
 class App {
     fb: any;
     constructor() {
         this.fb = new firebase1();
-        //this.shaharTests();
-        this.danaIgraTests();
+        this.shaharTests();
+        // this.danaIgraTests();
         // this.test123();
     }
     shaharTests() {
         try {
-            // Listen for any change on document and prints it's values
-            // can send values to another functions or anything...
-            let unsubscribe = this.fb.db.collection('Customers')
-                .onSnapshot(docs => {
-                    docs.forEach(doc => {
-                        console.log("Current data: ", doc.data());
-                    });
+            request('https://maps.googleapis.com/maps/api/timezone/json?location=31.983621,34.770766&timestamp=1527713490&key=AIzaSyAieQ7Jq2rYkjMPgOqTLe9FM4Pcblt1M0k', { json: true }, (err, res, body) => {
+                if (err) { return console.log(err); }
+                console.log(body);
             });
-            //to stop listener run -> unsubscribe() **or any variable name that equal the listener;
+                
         } catch(err) {
             console.log(err);
         }

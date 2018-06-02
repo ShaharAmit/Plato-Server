@@ -14,7 +14,9 @@ class FirebaseInit {
     }
     // read document and returns it values
     // return null if problem occur
+
 }
 module.exports = FirebaseInit;
+
 
 

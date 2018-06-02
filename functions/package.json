@@ -16,6 +16,7 @@
     "firebase-functions": "^1.0.0",
     "google-cloud": "^0.57.0",
     "npm": "^5.8.0",
+    "request": "^2.87.0",
     "sinon": "^5.0.7"
   },
   "devDependencies": {
