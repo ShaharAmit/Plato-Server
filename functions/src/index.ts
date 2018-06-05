@@ -28,7 +28,8 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     testing = require('./testing'),
     updateDishStatus = require('./updateDishStatus'),
     getDishesForKitchen = require('./getDishesForKitchen'),
-    addRest = require('./addRest');
+    addRest = require('./addRest'),
+    addTable = require('./addTable');
 
     
 import * as firebase from '../lib/firebase.js'
@@ -173,5 +174,10 @@ exports.createWorker = fb.functions.https.onCall((data, context) => {
 
 exports.addRest = fb.functions.https.onCall((data, context) => {
     const val = addRest.handler(data, context);
+    return val;
+});
+
+exports.addTable = fb.functions.https.onCall((data, context) => {
+    const val = addTable.handler(data, context);
     return val;
 });
