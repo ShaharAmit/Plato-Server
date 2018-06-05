@@ -10,13 +10,14 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     missingChanged = require('./shahar/meals/missingChanged'),
     groceryBackToMenu = require('./shahar/meals/groceryBackToMenu'),
 
-    addTableOrder = require('./shahar/orders/addTableOrder'),
-    checkOrders = require('./shahar/orders/checkOrders'),
+    //TODO: cron to tableOrdersPred
+    tableOrdersPred = require('./shahar/predictions/tableOrdersPred'),
+    tableOrdersPredHandler = require('./shahar/predictions/tableOrdersPredHandler'),
+    mealOrdered = require('./shahar/predictions/mealOrdered'),
+    addTableOrder = require('./shahar/predictions/addTableOrder'),
 
+    //TODO: cron to utc check
     checkUTC = require('./shahar/rest/checkUTC'),
-    restsCounterDelete = require('./shahar/rest/restsCounterDelete'),
-    restsCounterCreate = require('./shahar/rest/restsCounterCreate'),
-
 
     addGrocery = require('./addGrocery'),
     deleteGrocery = require('./deleteGrocery'),
@@ -25,7 +26,6 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     addMeal = require('./addMeal'),
     addKitchenStation = require('./addKitchenStation'),
     testing = require('./testing'),
-    mealOrdered = require('./shahar/orders/mealOrdered'),
     updateDishStatus = require('./updateDishStatus'),
     getDishesForKitchen = require('./getDishesForKitchen'),
     addRest = require('./addRest');
@@ -89,20 +89,8 @@ exports.createGlobWorker = fb.functions.firestore
         return val;
     });
 
-exports.restsCounterCreate = fb.functions.firestore
-    .document('{rest}/{restID}').onCreate((change, context) => {
-        const val = restsCounterCreate.handler(change, context);
-        return val;
-    });
-
-exports.restsCounterDelete = fb.functions.firestore
-    .document('{rest}/{restID}').onDelete((change, context) => {
-        const val = restsCounterDelete.handler(change, context);
-        return val;
-    });
-
 exports.addTableOrder = fb.functions.firestore
-    .document('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onCreate((change, context) => {
+    .document('{rest}/{restID}/TablesOrders/{tableID}/orders/{order}').onWrite((change, context) => {
         const val = addTableOrder.handler(change, context);
         return val;
     });
@@ -133,8 +121,13 @@ exports.testing = fb.functions.https.onRequest((req, res) => {
     return val;
 });
 
-exports.checkOrders = fb.functions.https.onRequest((req, res) => {
-    const val = checkOrders.handler(req, res);
+exports.tableOrdersPred = fb.functions.https.onRequest((req, res) => {
+    const val = tableOrdersPred.handler(req, res);
+    return val;
+});
+
+exports.tableOrdersPredHandler = fb.functions.https.onRequest((req, res) => {
+    const val = tableOrdersPredHandler.handler(req, res);
     return val;
 });
 

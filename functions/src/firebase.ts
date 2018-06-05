@@ -17,7 +17,8 @@ class FirebaseInitialize {
     db: FirebaseFirestore.Firestore;
     admin: typeof admin;
     functions: typeof functions;
-    key: string;
+    googleApiKey: string;
+    rest: string
    
     constructor() {
         this.functions = functions;
@@ -28,7 +29,8 @@ class FirebaseInitialize {
         this.bq = new BigQuery({
             projectId: 'plato-9a79e',
         });
-        this.key = 'AIzaSyAieQ7Jq2rYkjMPgOqTLe9FM4Pcblt1M0k';
+        this.googleApiKey = 'AIzaSyAieQ7Jq2rYkjMPgOqTLe9FM4Pcblt1M0k';
+        this.rest = 'Rests';
     }
     options(path,size,method,port,hostname) {
         const opt = {

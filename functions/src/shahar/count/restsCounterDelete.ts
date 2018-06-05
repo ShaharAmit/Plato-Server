@@ -8,8 +8,10 @@ exports.handler = (req, res) => {
         return doc.data().counter;
     }).then(counter => {
         ref.update({
-            counter: (counter+1)
+            counter: (counter-1)
         });
+    }).catch(error => {
+        console.log(error);
     });
  }
 

@@ -40,7 +40,7 @@ exports.handler = async (data, context) => {
         throw new fb.functions.https.HttpsError('failed-precondition', 'The function must be called ' +
             'while authenticated.');
     } else {
-        const rest = data.rest,
+        const rest = fb.rest,
             restID = data.restID,
             role = data.role,
             name = data.name,
