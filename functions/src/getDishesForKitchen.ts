@@ -19,7 +19,7 @@ exports.handler = (data, context) => {
     let ordersInitialized = 0;
     return new Promise((resolve, reject) => {
 
-        fb.db.collection(`/Rests/${restId}/Orders`).get().then(ordersQuerySnapshot => {
+        fb.db.collection(`/RestAlfa/${restId}/Orders`).get().then(ordersQuerySnapshot => {
 
             ordersQuerySnapshot.forEach(orderQueryDocSnapshot => {
                 orders[orderQueryDocSnapshot.id] = {

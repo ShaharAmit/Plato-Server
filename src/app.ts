@@ -35,7 +35,7 @@ class App {
         console.log("start dana func");
          let req :{
               query: {
-                path: "/Rests/kibutz-222/Orders/1524998020/meals/j55652Oakv7jc3f6Iogh/dishes/Burger"
+                path: "/RestAlfa/kibutz-222/Orders/1524998020/meals/j55652Oakv7jc3f6Iogh/dishes/Burger"
             }
         }
         const dish = this.fb.db.doc(req.query.path);
