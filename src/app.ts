@@ -12,15 +12,47 @@ class App {
         // this.test123();
     }
     shaharTests() {
-        try {
-            request('https://maps.googleapis.com/maps/api/timezone/json?location=31.983621,34.770766&timestamp=1527713490&key=AIzaSyAieQ7Jq2rYkjMPgOqTLe9FM4Pcblt1M0k', { json: true }, (err, res, body) => {
-                if (err) { return console.log(err); }
-                console.log(body);
-            });
-                
-        } catch(err) {
-            console.log(err);
-        }
+        const currTime = (Date.now()/1000) - 86400;
+        const ref = this.fb.db.collection('RestAlfa');
+        ref.orderBy('name','desc').limit(3).get().then(docs => {
+            docs.forEach(doc => {
+                const data = doc.data(),
+                    utc = data.utc,
+                    startTime = currTime-900000,
+                    //+day (in sec)
+                    endTime = currTime+86400,
+                    restID = doc.id;
+                let job;
+                const sqlQuery = `SELECT * FROM predictions.table_orders WHERE TimeStamp BETWEEN '${startTime}' AND '${endTime}' AND RestID = '${restID}';`,
+                    options = {
+                        query: sqlQuery,
+                        useLegacySql: false
+                    };
+                this.fb.bq.createQueryJob(options).then(results => {
+                    job = results[0];
+                    console.log(`Job ${job.id} started.`);
+                    return job.promise();
+                }).then(() => {
+                    // Get the job's status
+                    return job.getMetadata();
+                }).then(metadata => {
+                    // Check the job's status for errors
+                    const errors = metadata[0].status.errors;
+                    if (errors && errors.length > 0) {
+                    throw errors;
+                    }
+                }).then(() => {
+                    console.log(`Job ${job.id} completed.`);
+                    return job.getQueryResults();
+                }).then(results => {
+                    const rows = results[0];
+                    console.log('Rows:');
+                    rows.forEach(row => console.log(row));
+                }).catch(err => {
+                    console.error('ERROR:', err);
+                });
+            });        
+        });
     }
 
     danielLuzTests () {

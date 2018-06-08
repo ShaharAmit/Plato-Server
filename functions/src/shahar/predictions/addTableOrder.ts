@@ -7,16 +7,17 @@ exports.handler = async (change, context) => {
         rest = context.params.rest,
         tableID = context.params.tableID,
 
-        data = change.data();
-        console.log(data);
-        const
+        data = change.after.data(),
         customerID = data.orderedBy,
         instantOrder = data.instantOrder,
-        timeStamp = data.date,
+        timeStamp = parseInt((new Date(data.date).getTime() / 1000).toFixed(0)),
+        size = data.size,
+        status = data.status,
 
         table = fb.bq.dataset('predictions').table('table_orders');
-
-    fb.db.doc(rest+'/'+restID+'/Tables/'+tableID).get()
+        
+if(status === 'closed') {
+    return fb.db.doc(rest+'/'+restID+'/Tables/'+tableID).get()
         .then(docData => {
             return docData.data().size;
         }).then(tableSize => {
@@ -26,13 +27,13 @@ exports.handler = async (change, context) => {
                 TableSize: tableSize,
                 OrderID: orderID,
                 CustomerID: customerID,
-                TimeStamp: timeStamp
+                TimeStamp: timeStamp,
+                OrderSize: size,
             };
         }).then(row => {
-            table.insert(row)
+            return table.insert(row)
                 .then(() => {
-                    console.log(`Inserted ${row.length} rows`);
-                    return 0;
+                    console.log(`Inserted rows`);
                 })
                 .catch(err => {
                     if (err && err.name === 'PartialFailureError') {
@@ -45,6 +46,7 @@ exports.handler = async (change, context) => {
                     }
                 });
         });
+    }
  }
 
  

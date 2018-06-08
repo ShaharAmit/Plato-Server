@@ -3,10 +3,10 @@ const fb = new firebase(),
     request = require('request');
 
 exports.handler = (req, res) => {
-    const rest = req.query.rest,
+    const rest = fb.rest,
         restID = req.query.restID,
         time = (Date.now()/1000),
-        key = fb.key,
+        key = fb.googleApiKey,
         ref = fb.db.doc(rest+'/'+restID);
     console.log(rest + ' ' + restID);
     ref.get().then(doc => {
