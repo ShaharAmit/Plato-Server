@@ -4,6 +4,6 @@ const fb = new firebase();
 
 exports.handler = async (data, context) => {
     console.log('restId: ', data.restId);
-    fb.db.collection('RestAlfa' + '/' + data.restId + '/Grocery/').doc(data.name).delete();
+    fb.db.collection('Rests' + '/' + data.restId + '/Grocery/').doc(data.name).delete();
     console.log('grocery deleted')
 };

@@ -12,8 +12,8 @@ exports.handler = async (data, context) => {
     console.log("Starting Add Rest Function");
 
     return new Promise((resolve, reject) => {
-        const restDoc = fb.db.collection('RestAlfa').doc(data.id);
-        const subMenusDoc = restDoc.collection('restGlobals').doc('subMenus');
+        const restDoc = fb.db.collection('Rests').doc(data.id);
+        const subMenusDoc = restDoc.collection('RestGlobals').doc('subMenus');
         console.log("Adding sub menus");
         batch.set(subMenusDoc, subMenus);
         batch.set(restDoc, data);
