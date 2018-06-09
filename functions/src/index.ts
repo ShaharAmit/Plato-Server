@@ -29,9 +29,11 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     updateDishStatus = require('./updateDishStatus'),
     getDishesForKitchen = require('./getDishesForKitchen'),
     addRest = require('./addRest'),
+    setPossibleConnectionForTables = require('./setPossibleConnectionForTables'),
+    unDisplayTables = require('./unDisplayTables'),
     addTable = require('./addTable');
 
-    
+
 import * as firebase from '../lib/firebase.js'
 
 const fb = new firebase();
@@ -105,7 +107,7 @@ exports.groceryBackToMenu = fb.functions.firestore
     .document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
         const val = groceryBackToMenu.handler(change, context);
         return val;
-    });   
+    });
 
 exports.updateDishStatus = fb.functions.firestore.document("/{rest}/{restId}/Orders/{orderId}/meals/{mealId}/dishes/{dishId}").onUpdate((change, context) => {
     const val = updateDishStatus.handler(change, context);
@@ -179,5 +181,15 @@ exports.addRest = fb.functions.https.onCall((data, context) => {
 
 exports.addTable = fb.functions.https.onCall((data, context) => {
     const val = addTable.handler(data, context);
+    return val;
+});
+
+exports.setPossibleConnectionForTables = fb.functions.https.onCall((data, context) => {
+    const val = setPossibleConnectionForTables.handler(data, context);
+    return val;
+});
+
+exports.unDisplayTables = fb.functions.https.onCall((data, context) => {
+    const val = unDisplayTables.handler(data, context);
     return val;
 });
