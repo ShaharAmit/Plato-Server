@@ -31,6 +31,7 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     addRest = require('./addRest'),
     setPossibleConnectionForTables = require('./setPossibleConnectionForTables'),
     unDisplayTables = require('./unDisplayTables'),
+    disconnectMergedTables = require('./disconnectMergedTables'),
     addTable = require('./addTable');
 
 
@@ -191,5 +192,10 @@ exports.setPossibleConnectionForTables = fb.functions.https.onCall((data, contex
 
 exports.unDisplayTables = fb.functions.https.onCall((data, context) => {
     const val = unDisplayTables.handler(data, context);
+    return val;
+});
+
+exports.disconnectMergedTables = fb.functions.https.onCall((data, context) => {
+    const val = disconnectMergedTables.handler(data, context);
     return val;
 });
