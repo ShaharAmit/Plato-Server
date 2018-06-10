@@ -30,7 +30,7 @@ class FirebaseInitialize {
             projectId: 'plato-9a79e',
         });
         this.googleApiKey = 'AIzaSyAieQ7Jq2rYkjMPgOqTLe9FM4Pcblt1M0k';
-        this.rest = 'Rests';
+        this.rest = 'RestAlfa';
     }
     options(path,size,method,port,hostname) {
         const opt = {
