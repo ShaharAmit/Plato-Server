@@ -8,6 +8,7 @@ exports.handler = async (data, context) => {
     return new Promise((resolve, reject) => {
         batch.set(fb.db.collection(`/RestAlfa/${data.restId}/Tables`).doc(data.table.id), data.table);
         batch.set(fb.db.collection(`/RestAlfa/${data.restId}/TablesOrders`).doc(data.table.id), {});
+        batch.set(fb.db.collection(`/RestAlfa/${data.restId}/Tables/${data.table.id}/OriginDataTable`).doc("data"), data.table);
         batch.commit().then(resolve).catch(reject);
     });
 };
