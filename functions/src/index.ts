@@ -207,11 +207,8 @@ exports.disconnectMergedTables = fb.functions.https.onCall((data, context) => {
     const val = disconnectMergedTables.handler(data, context);
     return val;
 });
-<<<<<<< HEAD
-=======
 
 exports.mergeTables = fb.functions.https.onCall((data, context) => {
     const val = mergeTables.handler(data, context);
     return val;
 });
->>>>>>> 181347535b6068376c1d7696b272820364f15b6c
