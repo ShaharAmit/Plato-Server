@@ -1,98 +1,106 @@
 var firebase1 = require('../services/firebase.js'),
-request = require('request');
-import {Promise} from 'es6-promise';
-
+    request = require('request');
+import {
+    Promise
+} from 'es6-promise';
 
 class App {
     fb: any;
     constructor() {
         this.fb = new firebase1();
-        this.shaharTests();
+        this.loraineTests();
+
+        // this.shaharTests();
+
+
         // this.danaIgraTests();
         // this.test123();
+        // this.danielYosefTests();
     }
     shaharTests() {
-        const currTime = (Date.now()/1000) - 86400;
-        const ref = this.fb.db.collection('RestAlfa');
-        ref.orderBy('name','desc').limit(3).get().then(docs => {
-            docs.forEach(doc => {
-                const data = doc.data(),
-                    utc = data.utc,
-                    startTime = currTime-900000,
-                    //+day (in sec)
-                    endTime = currTime+86400,
-                    restID = doc.id;
-                let job;
-                const sqlQuery = `SELECT * FROM predictions.table_orders WHERE TimeStamp BETWEEN '${startTime}' AND '${endTime}' AND RestID = '${restID}';`,
-                    options = {
-                        query: sqlQuery,
-                        useLegacySql: false
-                    };
-                this.fb.bq.createQueryJob(options).then(results => {
-                    job = results[0];
-                    console.log(`Job ${job.id} started.`);
-                    return job.promise();
-                }).then(() => {
-                    // Get the job's status
-                    return job.getMetadata();
-                }).then(metadata => {
-                    // Check the job's status for errors
-                    const errors = metadata[0].status.errors;
-                    if (errors && errors.length > 0) {
-                    throw errors;
-                    }
-                }).then(() => {
-                    console.log(`Job ${job.id} completed.`);
-                    return job.getQueryResults();
-                }).then(results => {
-                    const rows = results[0];
-                    console.log('Rows:');
-                    rows.forEach(row => console.log(row));
-                }).catch(err => {
-                    console.error('ERROR:', err);
-                });
-            });        
-        });
+        const batch = this.fb.db.batch();
+        const day = this.fb.db.collection('/RestAlfa/kibutz-222/YearlyActivity'),
+        timestamp = 1528787520000;
+        const test = this.fb.db.doc('/RestAlfa/kibutz-222/YearlyActivity/'+`2`+'/Days/'+timestamp.toString());
+            batch.set(test,{
+                month: 5,
+                year: 2018,
+                timestamp: timestamp
+            });
+                for(let j=0; j<24; j++) {
+                    batch.update(test,{
+                        ['hour'+j]: {
+                            customersReal: 16,
+                            customersPred: 16,
+                        }
+                    });  
+                }
+        
+        batch.commit().then(()=>console.log('success'));
+
     }
 
-    danielLuzTests () {
-        const ref = this.fb.db.doc
+    danielLuzTests() {
+        const date = new Date(),
+            orderedBy = 'test',
+            status = 'active',
+            tableObj = {
+                size: 5
+            },
+            instantOrder = true,
+            id = 'testing',
+            friends = ['a','b'];
+            date.setHours(date.getHours() - 1);
+
+        this.fb.db.collection('/RestAlfa/kibutz-222/TablesOrders/5/orders').doc().set({
+            date: date,
+            orderedBy: orderedBy,
+            status: status,
+            instantOrder: instantOrder,
+            id: id,
+            friends: friends,
+            size: 3,
+            tableObj:  tableObj
+
+        }).then(console.log('success'));
+
     }
 
-    loraineTests () {
-        console.log('test')
-    }
-
-    danaIgraTests () {
-        console.log("start dana func");
-         let req :{
-              query: {
-                path: "/RestAlfa/kibutz-222/Orders/1524998020/meals/j55652Oakv7jc3f6Iogh/dishes/Burger"
+    loraineTests() {
+        let job;
+        const sqlQuery = `SELECT * FROM predictions.table_orders WHERE RestID = 'mozes-333' AND Status = 'closed' ORDER BY TimeStamp Asc;`,
+            options = {
+                query: sqlQuery,
+                useLegacySql: false
+            };
+        this.fb.bq.createQueryJob(options).then(results => {
+            job = results[0];
+            return job.promise();
+        }).then(() => {
+            // Get the job's status
+            return job.getMetadata();
+        }).then(metadata => {
+            // Check the job's status for errors
+            const errors = metadata[0].status.errors;
+            if (errors && errors.length > 0) {
+                throw errors;
             }
-        }
-        const dish = this.fb.db.doc(req.query.path);
-        dish.update({
-         status: 2,
-        }).then(()=>{
-            console.log("dish changed");
-        }).catch(err=>{
-            console.log("err");
-        });
-
-        
+        }).then(() => {
+            return job.getQueryResults();
+        }).then(results => {
+            const rows = results[0];
+                console.log(rows);
+        })
     }
 
-    danielYosefTests () {
-        
+    danaIgraTests() {
+
     }
 
-    helloTest() {
-        console.log('hey');
+    danielYosefTests() {
+
     }
 
-    test123() {
-        console.log('12');
-    }
 }
 module.exports = App;
 new App();

@@ -8,7 +8,6 @@ exports.handler = (req, res) => {
         time = (Date.now()/1000),
         key = fb.googleApiKey,
         ref = fb.db.doc(rest+'/'+restID);
-    console.log(rest + ' ' + restID);
     ref.get().then(doc => {
         return doc.data().location;
     }).then(location => {
@@ -19,15 +18,13 @@ exports.handler = (req, res) => {
                 console.log(err); 
                 res.status(400).send('fail'); 
             } else {
-                console.log(body);
-                console.log(body.dstOffset);
                 const utc = body.dstOffset + body.rawOffset;
-                ref.update({utc: utc}).then(res.status(200).send('done'))
+                ref.update({utc: utc*1000}).then(res.status(200).send('changed utc'))
             }
         });
     }).catch(err => {
         console.log(err);
-        res.status(400).send('fail'); 
+        res.status(404).send('fail'); 
     });
  }
 

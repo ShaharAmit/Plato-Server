@@ -6,14 +6,14 @@ function writeMessages(missing, rest, restID, mealName,url,icon) {
         batch.set(fb.db.collection(rest+'/'+restID+'/Messages/').doc(),{
             title: mealName,
             body: rawMaterial + ' is missing',
-            url:  url,
+            clickAction:  url,
             icon: icon        
         });
     }
     return batch.commit().then(() => {console.log('messages added')}).catch(err => console.log(err));
 }
 
-function removeMessages(bMissing, rest, restID, mealName) {
+async function removeMessages(bMissing, rest, restID, mealName) {
     const batch = fb.db.batch();
     for(const rawMaterial of bMissing) {
         //checking if body starts with 'raMaterial'
@@ -25,7 +25,7 @@ function removeMessages(bMissing, rest, restID, mealName) {
             } else {
                 endcode = strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
             }
-        fb.db.collection(rest+'/'+restID+'/Messages').where("title", "==", mealName).where("body",">=",rawMaterial).where("body","<=",endcode)
+        await fb.db.collection(rest+'/'+restID+'/Messages').where("title", "==", mealName).where("body",">=",rawMaterial).where("body","<=",endcode)
         .get().then(docs => {
             docs.forEach(doc => {
                 batch.delete(doc.ref);

@@ -7,21 +7,19 @@ exports.handler = async (change, context) => {
         rest = context.params.rest,
         tableID = context.params.tableID,
 
-        data = change.after.data(),
-        customerID = data.orderedBy,
-        instantOrder = data.instantOrder,
-        timeStamp = parseInt((new Date(data.date).getTime() / 1000).toFixed(0)),
-        size = data.size,
-        status = data.status,
+        before = change.before.data(),
+        data = change.after.data();
+    if(data) {
+        const customerID = data.orderedBy,
+            instantOrder = data.instantOrder,
+            timeStamp = parseInt((new Date(data.date).getTime()).toFixed(0)),
+            size = data.friends.length,
+            status = data.status,
+            tableSize = data.tableObj.size,
 
-        table = fb.bq.dataset('predictions').table('table_orders');
-        
-if(status === 'closed') {
-    return fb.db.doc(rest+'/'+restID+'/Tables/'+tableID).get()
-        .then(docData => {
-            return docData.data().size;
-        }).then(tableSize => {
-            return {
+            table = fb.bq.dataset('predictions').table('table_orders');
+        if (status === 'closed' || !before) {
+            const tableOrder = {
                 RestID: restID,
                 InstantOrder: instantOrder,
                 TableSize: tableSize,
@@ -29,9 +27,9 @@ if(status === 'closed') {
                 CustomerID: customerID,
                 TimeStamp: timeStamp,
                 OrderSize: size,
+                Status: status
             };
-        }).then(row => {
-            return table.insert(row)
+            return table.insert(tableOrder)
                 .then(() => {
                     console.log(`Inserted rows`);
                 })
@@ -45,8 +43,11 @@ if(status === 'closed') {
                         console.error('ERROR:', err);
                     }
                 });
-        });
+            // });
+        } else {
+            console.log('table order edited');
+        }
+    } else {
+        console.log('order deleted');
     }
- }
-
- 
+}
