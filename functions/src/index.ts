@@ -34,7 +34,8 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     unDisplayTables = require('./unDisplayTables'),
     disconnectMergedTables = require('./disconnectMergedTables'),
     addTable = require('./addTable'),
-    mergeTables = require('./mergeTables');
+    mergeTables = require('./mergeTables'),
+    validateTablesAreConnectable = require('./validateTablesAreConnectable');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -210,5 +211,10 @@ exports.disconnectMergedTables = fb.functions.https.onCall((data, context) => {
 
 exports.mergeTables = fb.functions.https.onCall((data, context) => {
     const val = mergeTables.handler(data, context);
+    return val;
+});
+
+exports.validateTablesAreConnectable = fb.functions.https.onCall((data, context) => {
+    const val = validateTablesAreConnectable.handler(data, context);
     return val;
 });

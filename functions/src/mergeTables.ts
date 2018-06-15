@@ -29,7 +29,7 @@ exports.handler = async (data, context) => {
     const table1 = data.table1;
     const table2 = data.table2;
 
-    const mergedRect = getNewRectangle(table1, table2);
+    const mergedRect = getMergedRectangle(table1, table2);
     const mergedTable: any = {};
     mergedTable.id = `${table1.id}+${table2.id}`;
     mergedTable.x = mergedRect.x;
@@ -60,7 +60,7 @@ exports.handler = async (data, context) => {
     });
 };
 
-function getNewRectangle(table1, table2) {
+export function getMergedRectangle(table1, table2): any {
     const id = `${table1.id}+${table2.id}`;
     if (table1.width === table2.width) {
         const x = table1.x;
