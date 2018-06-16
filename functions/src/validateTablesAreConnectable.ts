@@ -80,7 +80,6 @@ function willRectangleWontOverrideOtherRectangles(grid, table: Table): boolean {
             }
         }
     }
-
     return false;
 }
 

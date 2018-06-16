@@ -35,7 +35,9 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     disconnectMergedTables = require('./disconnectMergedTables'),
     addTable = require('./addTable'),
     mergeTables = require('./mergeTables'),
-    validateTablesAreConnectable = require('./validateTablesAreConnectable');
+    validateTablesAreConnectable = require('./validateTablesAreConnectable'),
+    updateTableLocation = require('./updateTableLocation'),
+    mergeMovedTables = require('./mergeMovedTables');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -106,7 +108,7 @@ exports.mealOrdered = fb.functions.firestore
         const val = mealOrdered.handler(change, context);
         return val;
     });
-    
+
 exports.predictNextWeekCustomers = fb.functions.firestore
     .document('{rest}/{restID}/YearlyActivity/{hour}/Days/{timestamp}').onUpdate((change, context) => {
         const val = predictNextWeekCustomers.handler(change, context);
@@ -218,3 +220,14 @@ exports.validateTablesAreConnectable = fb.functions.https.onCall((data, context)
     const val = validateTablesAreConnectable.handler(data, context);
     return val;
 });
+
+exports.updateTableLocation = fb.functions.https.onCall((data, context) => {
+    const val = updateTableLocation.handler(data, context);
+    return val;
+});
+
+exports.mergeMovedTables = fb.functions.https.onCall((data, context) => {
+    const val = mergeMovedTables.handler(data, context);
+    return val;
+});
+
