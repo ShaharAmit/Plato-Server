@@ -7,21 +7,23 @@ const fb = new firebase();
 const width = 12;
 const height = 12;
 
-exports.handler = async (data: ({ table1: Table, table2: Table, restId: string }), context) => {
+exports.handler = async (data: ({ movedTable: Table, connectedToTable: Table, restId: string }), context) => {
 
     console.log('data', data);
-    const table1: Table = data.table1;
-    const table2: Table = data.table2;
+    const connectedToTable: Table = data.movedTable;
+    const movedTable: Table = data.connectedToTable;
+    console.log('connectedTo', connectedToTable);
+    console.log('moved', movedTable);
 
     return new Promise((resolve, reject) => {
 
 
-        if (table1.width === table2.width) {
-            if (table1.y + table1.height + table2.height > height) {
+        if (connectedToTable.width === movedTable.width) {
+            if (connectedToTable.y + connectedToTable.height + movedTable.height > height) {
                 throw new HttpsError("aborted", 'Can\'t connect tables, height will overflow');
             }
-        } else if (table1.height === table2.height) {
-            if (table1.x + table1.width + table2.width > width) {
+        } else if (connectedToTable.height === movedTable.height) {
+            if (connectedToTable.x + connectedToTable.width + movedTable.width > width) {
                 throw new HttpsError("aborted", 'Can\'t connect tables, width will overflow');
             }
         }
@@ -36,8 +38,8 @@ exports.handler = async (data: ({ table1: Table, table2: Table, restId: string }
                 console.log('tables', tables);
                 const grid = createEmptyGridObject();
                 markRectangles(grid, tables);
-                markRectangles(grid, [table1, table2], false);
-                if (willRectangleWontOverrideOtherRectangles(grid, getMergedRectangle(table1, table2))) {
+                markRectangles(grid, [connectedToTable, movedTable], false);
+                if (willRectangleWontOverrideOtherRectangles(grid, getMergedRectangle(connectedToTable, movedTable))) {
                     throw new HttpsError("aborted", 'Merged Table Will Override Existing tables');
                 }
 
