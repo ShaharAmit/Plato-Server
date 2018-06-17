@@ -8,7 +8,6 @@ exports.handler = async (req, res) => {
 
     const today = new Date();
         today.setTime(today.getTime() + Number(utc));
-        console.log('il today',today.getTime);
 
         const endTime = new Date();
         endTime.setTime(today.getTime());
@@ -26,7 +25,6 @@ exports.handler = async (req, res) => {
     await todayRef.orderBy("timestamp",'desc').limit(1).get().then(docs => {
         docs.forEach(doc => {
             dayRef = todayRef.doc(doc.id);
-            console.log(doc.id);
         }); 
         for (let i = 0; i < 24; i++) {
             hours[i] = 0;
@@ -55,18 +53,11 @@ exports.handler = async (req, res) => {
         }).then(results => {
             const rows = results[0];
             for (let row of rows) {
-                console.log('row',row);
                 const hour = new Date();
-                console.log('hour',hour);
                 hour.setTime(row.TimeStamp);
-                console.log('hour after',hour);
-                console.log('hours',hour.getHours());
-            
-                console.log('type',typeof hour);
                 hours[hour.getHours()] = hours[hour.getHours()] + row.OrderSize;
             };
             for (let hour = 0; hour < 24; hour++) {
-                console.log('inserted');
                 batch.update(dayRef, {
                     ['hour'+hour]: {
                         customersReal: hours[hour]

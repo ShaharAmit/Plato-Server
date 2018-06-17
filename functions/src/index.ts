@@ -10,12 +10,14 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     missingChanged = require('./shahar/meals/missingChanged'),
     groceryBackToMenu = require('./shahar/meals/groceryBackToMenu'),
 
-    //TODO: cron to tableOrdersPred
     collectTableOrders = require('./shahar/predictions/collectTableOrders'),
-    collectTableOrdersHandler = require('./shahar/predictions/collectTableOrdersHandler'),
+    predictionHandler = require('./shahar/predictions/predictionHandler'),
     mealOrdered = require('./shahar/predictions/mealOrdered'),
     addTableOrder = require('./shahar/predictions/addTableOrder'),
     predictNextWeekCustomers = require('./shahar/predictions/predictNextWeekCustomers'),
+    collectRawMat = require('./shahar/predictions/collectRawMat'),
+    predictNextWeekRawMat = require('./shahar/predictions/predictNextWeekRawMat'),
+    
 
     //TODO: cron to utc check
     checkUTC = require('./shahar/rest/checkUTC'),
@@ -111,6 +113,12 @@ exports.predictNextWeekCustomers = fb.functions.firestore
         const val = predictNextWeekCustomers.handler(change, context);
         return val;
     });
+    
+exports.predictNextWeekRawMat = fb.functions.firestore
+    .document('{rest}/{restID}/YearlyUse/{hour}/Days/{timestamp}').onUpdate((change, context) => {
+        const val = predictNextWeekRawMat.handler(change, context);
+        return val;
+    });
 
 exports.groceryBackToMenu = fb.functions.firestore
     .document('{rest}/{restID}/Meals/{mealID}').onUpdate((change, context) => {
@@ -133,13 +141,18 @@ exports.testing = fb.functions.https.onRequest((req, res) => {
     return val;
 });
 
+exports.collectRawMat = fb.functions.https.onRequest((req, res) => {
+    const val = collectRawMat.handler(req, res);
+    return val;
+});
+
 exports.collectTableOrders = fb.functions.https.onRequest((req, res) => {
     const val = collectTableOrders.handler(req, res);
     return val;
 });
 
-exports.collectTableOrdersHandler = fb.functions.https.onRequest((req, res) => {
-    const val = collectTableOrdersHandler.handler(req, res);
+exports.predictionHandler = fb.functions.https.onRequest((req, res) => {
+    const val = predictionHandler.handler(req, res);
     return val;
 });
 

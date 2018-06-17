@@ -19,7 +19,7 @@ exports.handler = (req, res) => {
                 res.status(400).send('fail'); 
             } else {
                 const utc = body.dstOffset + body.rawOffset;
-                ref.update({utc: utc*1000}).then(res.status(200).send('changed utc'))
+                ref.collection('restGlobals').doc('predictionParams').update({utc: utc*1000}).then(res.status(200).send('changed utc'))
             }
         });
     }).catch(err => {

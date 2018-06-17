@@ -1,128 +1,32 @@
-var firebase1 = require('../services/firebase.js'),
-    request = require('request');
-import {
-    Promise
-} from 'es6-promise';
+import * as firebase from '../../../lib/firebase.js'
+const fb = new firebase();
 
-class App {
-    fb: any;
-    constructor() {
-        this.fb = new firebase1();
-        // this.loraineTests();
+exports.handler = async (change, context) => {
+    const rest = context.params.rest,
+        restID = context.params.restID,
+        day = context.params.hour,
+        batch = fb.db.batch(),
+        afterData = change.after.data()
 
-        // this.shaharTests();
-
-
-        // this.danaIgraTests();
-        // this.test123();
-        this.danielYosefTests();
-    }
-    shaharTests() {
-        const batch = this.fb.db.batch();
-        const day = this.fb.db.collection('/RestAlfa/kibutz-222/YearlyActivity'),
-            timestamp = 1528787520000;
-        const test = this.fb.db.doc('/RestAlfa/kibutz-222/YearlyActivity/' + `2` + '/Days/' + timestamp.toString());
-        batch.set(test, {
-            month: 5,
-            year: 2018,
-            timestamp: timestamp
-        });
-        for (let j = 0; j < 24; j++) {
-            batch.update(test, {
-                ['hour' + j]: {
-                    customersReal: 16,
-                    customersPred: 16,
-                }
-            });
-        }
-
-        batch.commit().then(() => console.log('success'));
-
-    }
-
-    danielLuzTests() {
-        const date = new Date(),
-            orderedBy = 'test',
-            status = 'active',
-            tableObj = {
-                size: 5
-            },
-            instantOrder = true,
-            id = 'testing',
-            friends = ['a', 'b'];
-        date.setHours(date.getHours() - 1);
-
-        this.fb.db.collection('/RestAlfa/kibutz-222/TablesOrders/5/orders').doc().set({
-            date: date,
-            orderedBy: orderedBy,
-            status: status,
-            instantOrder: instantOrder,
-            id: id,
-            friends: friends,
-            size: 3,
-            tableObj: tableObj
-
-        }).then(console.log('success'));
-
-    }
-
-    loraineTests() {
-        let job;
-        const sqlQuery = `SELECT * FROM predictions.meal_orders WHERE Status = 2  OR Status = 3 ORDER BY TimeStamp Asc;`,
-            options = {
-                query: sqlQuery,
-                useLegacySql: false
-            };
-        this.fb.bq.createQueryJob(options).then(results => {
-            job = results[0];
-            return job.promise();
-        }).then(() => {
-            // Get the job's status
-            return job.getMetadata();
-        }).then(metadata => {
-            // Check the job's status for errors
-            const errors = metadata[0].status.errors;
-            if (errors && errors.length > 0) {
-                throw errors;
-            }
-        }).then(() => {
-            return job.getQueryResults();
-        }).then(results => {
-            const rows = results[0];
-            for (let row of rows) {
-                // console.log(row);
-                const mealJson = JSON.parse(row.MealJson);
-                console.log(row);
-                // console.log(mealJson['burger and fries']['burger']['bun']['rawMaterial']);
-
-            }
-
-        })
-    }
-
-    danaIgraTests() {
-        const rest= 'RestAlfa',
-            restID = 'mozes-333',
-            day='5',
-            batch = this.fb.db.batch();
-        this.fb.db.doc(rest + '/' + restID+'/restGlobals/predictionParams').get().then(doc => {
+    if (afterData && afterData.mealsReal && Object.keys(afterData.mealsReal).length > 0) {
+        fb.db.doc(rest + '/' + restID+'/restGlobals/predictionParams').get().then(doc => {
             const utc = doc.data().utc,
                 currTime = (Date.now()),
                 today = new Date(currTime + Number(utc)),
-                yearRef = this.fb.db.collection(rest + '/' + restID + '/YearlyUse'),
+                yearRef = fb.db.collection(rest + '/' + restID + '/YearlyUse'),
                 todayRef = yearRef.doc(day).collection('Days'),
                 week = new Date();
             week.setDate(today.getDate() + 6);
+            console.log('week',week.getDay());
             if( week.getDay() === Number(day)) {
 
                 const hourRef = todayRef.doc((week.getTime()).toString()),
                     realData = [];
-                realData[0] = {};
-                realData[1] = {};
-                realData[2] = [];
+                    realData[0] = {};
+                    realData[1] = {};
+                    realData[2] = [];
 
-
-                todayRef.orderBy('timestamp').get().then(docs => {
+                return todayRef.orderBy('timestamp').get().then(docs => {
                     let docCounter=0;
                     docs.forEach(docc => {
                         const data = docc.data();
@@ -287,55 +191,16 @@ class App {
                             }
                         },{merge: true});
                     }
-                });
+                }).then(() => {
+                    return batch.commit().then(() => {
+                        console.log('updated pred')
+                    });
+                }).catch(err => {return console.log(err)});
+            } else {
+                console.log('day should not have changed')
             }
-        });
-
+        }).catch(err => {return console.log(err)});
+    } else {
+        return console.log('nothing changed')
     }
-
-    danielYosefTests() {
-        
-        const mealsReal = {
-            'burger and fries': 15,
-            'salad moz' : 7.5
-
-        },
-        
-
-        rawMaterialsReal = {
-            'bun': 15,
-            'cola': 15,
-            'fat': 300,
-            'lettuce': 540,
-            'mince': 4400,
-            'onion': 440,
-            'potato': 360,
-            'tomato': 440
-        },
-        
-        timestamp = 1530259805000,
-
-        ref = this.fb.db.doc('/RestAlfa/mozes-333/YearlyUse/5/Days/'+`${timestamp}`);
-        ref.set({
-            mealsReal: mealsReal,
-            rawMaterialsReal: rawMaterialsReal,
-            timestamp: timestamp
-        }).then(()=>console.log('added'));
-
-    }
-
-    test123() {
-            const batch = this.fb.db.batch();
-
-        for(let i=0; i<7; i++) {
-            const yearRef = this.fb.db.collection('RestAlfa/mozes-333/YearlyUse').doc(`${i}`);
-            batch.set(yearRef,{day: i})
-        } 
-
-        batch.commit().then(() => console.log('success'))
-    }
-
-
 }
-module.exports = App;
-new App();

@@ -8,7 +8,7 @@ exports.handler = async (change, context) => {
         batch = fb.db.batch();
 
     if (change.after.data() && change.after.data()['hour0'].customersReal) {
-        fb.db.doc(rest + '/' + restID).get().then(doc => {
+        fb.db.doc(rest + '/' + restID + '/restGlobals/predictionParams').get().then(doc => {
             const utc = doc.data().utc,
                 currTime = (Date.now()),
                 today = new Date(currTime + Number(utc)),
@@ -42,6 +42,7 @@ exports.handler = async (change, context) => {
                     batch.set(hourRef, {
                         year: (week.getFullYear()).toString(),
                         month: (week.getMonth()).toString(),
+                        date: (week.getDate().toString()),
                         timeStamp: week.getTime()
                     })
                         const yPreds = [];
