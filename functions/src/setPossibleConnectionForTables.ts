@@ -10,6 +10,8 @@ exports.handler = async (data, context) => {
         const table2 = data.tables[1];
         batch.set(fb.db.collection(`/RestAlfa/${data.restId}/Tables/${table1}/connectableTables`).doc(table2), {id: table2});
         batch.set(fb.db.collection(`/RestAlfa/${data.restId}/Tables/${table2}/connectableTables`).doc(table1), {id: table1});
+        batch.set(fb.db.doc(`/RestAlfa/${data.restId}/Tables/${table1}`),{connectedTo: {['table'+ table2]:false}}, {merge: true});
+        batch.set(fb.db.doc(`/RestAlfa/${data.restId}/Tables/${table2}`),{connectedTo: {['table'+ table1]:false}}, {merge: true});
         batch.commit().then(resolve).catch(reject);
     });
 };
