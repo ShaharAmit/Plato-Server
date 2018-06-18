@@ -7,10 +7,9 @@ exports.handler = async (data, context) => {
 
     const connectedTo = {};
     connectedTo['table' + data.movedTableId] = true;
-    console.log('connectedTo', connectedTo);
 
     batch.set(fb.db.doc(`/RestAlfa/${data.restId}/Tables/${data.connectedToTableId}`), {connectedTo}, {merge: true});
     batch.update(fb.db.doc(`/RestAlfa/${data.restId}/Tables/${data.connectedToTableId}`), {connectedNow: true});
 
     return batch.commit();
-};
+}
