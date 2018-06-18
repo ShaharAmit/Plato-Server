@@ -17,11 +17,17 @@ exports.handler = async (data, context) => {
 
     batch.update(fb.db.doc(`/RestAlfa/${restId}/Tables/${connectedToId}`), {displayed: true});
     return new Promise((resolve, reject) => {
-        fb.db.doc(`/RestAlfa/${restId}/Tables/${mergedTable.id}/OriginDataTable/data`).get()
+        fb.db.doc(`/RestAlfa/${restId}/Tables/${connectedToId}/OriginDataTable/data`).get()
             .then(x => {
                 const originalData = x.data();
-                batch.set(fb.db.doc(`/RestAlfa/${restId}/Tables/${mergedTable.id}`), originalData);
-                batch.commit().then(resolve).catch(reject);
-            })
+                batch.set(fb.db.doc(`/RestAlfa/${restId}/Tables/${connectedToId}`), originalData);
+                fb.db.doc(`/RestAlfa/${restId}/Tables/${mergedTable.id}/OriginDataTable/data`).get()
+                    .then(x => {
+                        const originalData = x.data();
+                        batch.set(fb.db.doc(`/RestAlfa/${restId}/Tables/${mergedTable.id}`), originalData);
+                        batch.commit().then(resolve).catch(reject);
+                    }).catch(reject);
+            }).catch(reject);
+
     })
 };

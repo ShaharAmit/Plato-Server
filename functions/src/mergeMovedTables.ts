@@ -10,6 +10,7 @@ exports.handler = async (data, context) => {
 
     batch.set(fb.db.doc(`/RestAlfa/${data.restId}/Tables/${data.connectedToTableId}`), {connectedTo}, {merge: true});
     batch.update(fb.db.doc(`/RestAlfa/${data.restId}/Tables/${data.connectedToTableId}`), {connectedNow: true});
+    batch.update(fb.db.doc(`/RestAlfa/${data.restId}/Tables/${data.movedTableId}`), {displayed: false});
 
     return batch.commit();
-}
+};
