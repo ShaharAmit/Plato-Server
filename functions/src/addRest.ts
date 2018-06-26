@@ -16,20 +16,31 @@ exports.handler = async (data, context) => {
     const subMenus = {list: rest.subMenus};
     delete rest.workingDays;
     delete rest.subMenus;
+    const predictionParams = {
+        collectData: true,
+        customersPredict: false,
+        mealsPredict: false,
+        stockPredict: false
+    };
+
 
     console.log("Starting Add Rest Function");
 
     return new Promise((resolve, reject) => {
         const restDoc = fb.db.collection('RestAlfa').doc(rest.id);
         const subMenusDoc = restDoc.collection('restGlobals').doc('subMenus');
+
         console.log("Adding sub menus");
         batch.set(subMenusDoc, subMenus);
         batch.set(restDoc, rest);
         for (let i = 0; i < workingDays.length; i++) {
-            batch.set(restDoc.collection('WorkingDays').doc(`${i}`), workingDays[i]);
+            batch.set(fb.db.collection(`RestAlfa/${rest.id}/WorkingDays`).doc(`${i}`), workingDays[i]);
+            batch.set(fb.db.collection(`RestAlfa/${rest.id}/YearlyActivity`).doc(`${i}`), workingDays[i]);
+            batch.set(fb.db.collection(`RestAlfa/${rest.id}/YearlyUse`).doc(`${i}`), workingDays[i]);
         }
 
         batch.set(fb.db.collection(`/GlobWorkers/${fbId}/Rest`).doc(restId), userRestObj);
+        batch.set(fb.db.collection(`RestAlfa/${rest.id}/restGlobals`).doc('predictionParams'), predictionParams);
 
         batch.commit().then(resolve).catch(reject);
     });

@@ -40,7 +40,8 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     mergeTables = require('./mergeTables'),
     validateTablesAreConnectable = require('./validateTablesAreConnectable'),
     updateTableLocation = require('./updateTableLocation'),
-    mergeMovedTables = require('./mergeMovedTables');
+    mergeMovedTables = require('./mergeMovedTables'),
+    createStaticObject = require('./createStaticObject');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -124,7 +125,7 @@ exports.predictNextWeekCustomers = fb.functions.firestore
         const val = predictNextWeekCustomers.handler(change, context);
         return val;
     });
-    
+
 exports.predictNextWeekRawMat = fb.functions.firestore
     .document('{rest}/{restID}/YearlyUse/{hour}/Days/{timestamp}').onUpdate((change, context) => {
         const val = predictNextWeekRawMat.handler(change, context);
@@ -257,3 +258,7 @@ exports.mergeMovedTables = fb.functions.https.onCall((data, context) => {
     return val;
 });
 
+exports.createStaticObject = fb.functions.https.onCall((data, context) => {
+    const val = createStaticObject.handler(data, context);
+    return val;
+});
