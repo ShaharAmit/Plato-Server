@@ -12,14 +12,16 @@ const sendMessage = require('./shahar/customers/sendMessage'),
 
     collectTableOrders = require('./shahar/predictions/collectTableOrders'),
     predictionHandler = require('./shahar/predictions/predictionHandler'),
+    checkStockHandler = require('./shahar/predictions/checkStockHandler'),
     mealOrdered = require('./shahar/predictions/mealOrdered'),
     addTableOrder = require('./shahar/predictions/addTableOrder'),
     predictNextWeekCustomers = require('./shahar/predictions/predictNextWeekCustomers'),
     collectRawMat = require('./shahar/predictions/collectRawMat'),
     predictNextWeekRawMat = require('./shahar/predictions/predictNextWeekRawMat'),
-    
+    checkStockPrediction = require('./shahar/predictions/checkStockPrediction'),
 
-    //TODO: cron to utc check
+    checkRanks = require('./shahar/ranks/checkRanks'),
+
     checkUTC = require('./shahar/rest/checkUTC'),
 
     addGrocery = require('./addGrocery'),
@@ -69,6 +71,13 @@ exports.sendMessage = fb.functions.firestore
     .document('{rest}/{restID}/Messages/{messageID}')
     .onCreate((change, context) => {
         const val = sendMessage.handler(change, context);
+        return val;
+    });
+
+exports.checkRanks = fb.functions.firestore
+    .document('{rest}/{restID}/MealsRanking/{Meal}/{rank}/{newRank}')
+    .onCreate((change, context) => {
+        const val = checkRanks.handler(change, context);
         return val;
     });
 
@@ -138,6 +147,11 @@ exports.checkUTC = fb.functions.https.onRequest((req, res) => {
     return val;
 });
 
+exports.checkStockPrediction = fb.functions.https.onRequest((req, res) => {
+    const val = checkStockPrediction.handler(req, res);
+    return val;
+});
+
 exports.testing = fb.functions.https.onRequest((req, res) => {
     const val = testing.handler(req, res);
     return val;
@@ -155,6 +169,11 @@ exports.collectTableOrders = fb.functions.https.onRequest((req, res) => {
 
 exports.predictionHandler = fb.functions.https.onRequest((req, res) => {
     const val = predictionHandler.handler(req, res);
+    return val;
+});
+
+exports.checkStockHandler = fb.functions.https.onRequest((req, res) => {
+    const val = checkStockHandler.handler(req, res);
     return val;
 });
 

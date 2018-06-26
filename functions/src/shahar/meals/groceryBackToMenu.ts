@@ -28,7 +28,6 @@ exports.handler = async (change, context) => {
                             t = doc.data().importance;
                         });
                     }).then(() => {
-                        console.log('t',t);
                         if(!t) {
                             console.log('false - backToMenu');
                             updateRef.update({

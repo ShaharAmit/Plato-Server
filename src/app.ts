@@ -1,5 +1,7 @@
 var firebase1 = require('../services/firebase.js'),
     request = require('request');
+    var dateFormat = require('dateformat');
+
 import {
     Promise
 } from 'es6-promise';
@@ -16,6 +18,7 @@ class App {
         // this.danaIgraTests();
         // this.test123();
         this.danielYosefTests();
+        // this.test987();
     }
     shaharTests() {
         const batch = this.fb.db.batch();
@@ -67,8 +70,10 @@ class App {
     }
 
     loraineTests() {
+        console.log(dateFormat(new Date(), `yyyy-mm-dd'T'HH:MM:ss`),
+    );
         let job;
-        const sqlQuery = `SELECT * FROM predictions.meal_orders WHERE Status = 2  OR Status = 3 ORDER BY TimeStamp Asc;`,
+        const sqlQuery = `SELECT * FROM predictions.meal_orders ORDER BY TimeStamp Asc;`,
             options = {
                 query: sqlQuery,
                 useLegacySql: false
@@ -294,33 +299,46 @@ class App {
     }
 
     danielYosefTests() {
-        
-        const mealsReal = {
-            'burger and fries': 15,
-            'salad moz' : 7.5
-
+        const rawMaterialsPred = {
+            bun: 300,
+            test: 500
         },
+        // const mealsReal = {
+        //     'burger and fries': 15,
+        //     'salad moz' : 7.5
+
+        // },
         
 
-        rawMaterialsReal = {
-            'bun': 15,
-            'cola': 15,
-            'fat': 300,
-            'lettuce': 540,
-            'mince': 4400,
-            'onion': 440,
-            'potato': 360,
-            'tomato': 440
-        },
+        // rawMaterialsReal = {
+        //     'bun': 15,
+        //     'cola': 15,
+        //     'fat': 300,
+        //     'lettuce': 540,
+        //     'mince': 4400,
+        //     'onion': 440,
+        //     'potato': 360,
+        //     'tomato': 440
+        // },
         
-        timestamp = 1530259805000,
+        timestamp = new Date(),
+        batch = this.fb.db.batch(),
 
-        ref = this.fb.db.doc('/RestAlfa/mozes-333/YearlyUse/5/Days/'+`${timestamp}`);
-        ref.set({
-            mealsReal: mealsReal,
-            rawMaterialsReal: rawMaterialsReal,
-            timestamp: timestamp
-        }).then(()=>console.log('added'));
+        ref = this.fb.db.collection('/RestAlfa/kibutz-222/YearlyUse');
+        for(let day = 0; day<7; day++) {
+            let date = new Date();
+            date.setDate(timestamp.getDate() + day);
+            const dayRef = ref.doc(`${day}`),
+                tempRef = dayRef.collection('Days').doc(`${date.getTime()}`);
+            batch.set(dayRef,{day:day});
+            batch.set(tempRef,{
+                rawMaterialsPred: rawMaterialsPred,
+                timestamp: date.getTime()
+            });
+        }
+        batch.commit().then(() => {
+            console.log('succed');
+        })
 
     }
 
@@ -333,6 +351,19 @@ class App {
         } 
 
         batch.commit().then(() => console.log('success'))
+    }
+
+    test987() {
+        const Rank1 =0,
+            Rank2 = 0,
+            Rank3 = 8,
+            ref = this.fb.db.doc('RestAlfa/kibutz-222/MealsRanking/schnitzel and fries');
+            ref.set({
+                Rank1: Rank1,
+                Rank2: Rank2,
+                Rank3: Rank3
+            }).then(()=>console.log('success')).catch(err => console.log(err));
+
     }
 
 

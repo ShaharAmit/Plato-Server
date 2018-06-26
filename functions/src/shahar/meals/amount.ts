@@ -1,5 +1,4 @@
 import * as firebase from '../../../lib/firebase.js'
-import { basename } from 'path';
 const fb = new firebase();
 exports.handler = async (change, context) => {
     try {
