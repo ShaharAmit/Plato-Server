@@ -39,7 +39,10 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     validateTablesAreConnectable = require('./validateTablesAreConnectable'),
     updateTableLocation = require('./updateTableLocation'),
     mergeMovedTables = require('./mergeMovedTables'),
-    createStaticObject = require('./createStaticObject');
+    createStaticObject = require('./createStaticObject'),
+    addRawMaterial = require('./addRawMaterial'),
+    deleteRawMaterial = require('./deleteRawMaterial'),
+    preCheckForDeletingRawMaterial = require('./preCheckForDeletingRawMaterial');
 
 import * as firebase from '../lib/firebase.js'
 
@@ -241,5 +244,20 @@ exports.mergeMovedTables = fb.functions.https.onCall((data, context) => {
 
 exports.createStaticObject = fb.functions.https.onCall((data, context) => {
     const val = createStaticObject.handler(data, context);
+    return val;
+});
+
+exports.addRawMaterial = fb.functions.https.onCall((data, context) => {
+    const val = addRawMaterial.handler(data, context);
+    return val;
+});
+
+exports.preCheckForDeletingRawMaterial = fb.functions.https.onCall((data, context) => {
+    const val = preCheckForDeletingRawMaterial.handler(data, context);
+    return val;
+});
+
+exports.deleteRawMaterial = fb.functions.https.onCall((data, context) => {
+    const val = deleteRawMaterial.handler(data, context);
     return val;
 });
