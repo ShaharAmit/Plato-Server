@@ -19,10 +19,18 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     collectRawMat = require('./shahar/predictions/collectRawMat'),
     predictNextWeekRawMat = require('./shahar/predictions/predictNextWeekRawMat'),
     checkStockPrediction = require('./shahar/predictions/checkStockPrediction'),
+    smallChecksHandler = require('./shahar/predictions/smallChecksHandler'),
+    collectRecommendations = require('./shahar/predictions/collectRecommendations'),
+    onceInAMonthHandler = require('./shahar/predictions/onceInAMonthHandler'),
+    gatherRanking = require('./shahar/predictions/gatherRanking'),
 
     checkRanks = require('./shahar/ranks/checkRanks'),
 
     checkUTC = require('./shahar/rest/checkUTC'),
+
+    countOrders = require('./shahar/count/countOrders'),
+    countCustomers = require('./shahar/count/countCustomers'),
+    countMostPopular = require('./shahar/count/countMostPopular'),
 
     addGrocery = require('./addGrocery'),
     deleteGrocery = require('./deleteGrocery'),
@@ -163,6 +171,16 @@ exports.collectRawMat = fb.functions.https.onRequest((req, res) => {
     return val;
 });
 
+exports.gatherRanking = fb.functions.https.onRequest((req, res) => {
+    const val = gatherRanking.handler(req, res);
+    return val;
+});
+
+exports.collectRecommendations = fb.functions.https.onRequest((req, res) => {
+    const val = collectRecommendations.handler(req, res);
+    return val;
+});
+
 exports.collectTableOrders = fb.functions.https.onRequest((req, res) => {
     const val = collectTableOrders.handler(req, res);
     return val;
@@ -173,8 +191,33 @@ exports.predictionHandler = fb.functions.https.onRequest((req, res) => {
     return val;
 });
 
+exports.countOrders = fb.functions.https.onRequest((req, res) => {
+    const val = countOrders.handler(req, res);
+    return val;
+});
+
+exports.countCustomers = fb.functions.https.onRequest((req, res) => {
+    const val = countCustomers.handler(req, res);
+    return val;
+});
+
+exports.countMostPopular = fb.functions.https.onRequest((req, res) => {
+    const val = countMostPopular.handler(req, res);
+    return val;
+});
+
 exports.checkStockHandler = fb.functions.https.onRequest((req, res) => {
     const val = checkStockHandler.handler(req, res);
+    return val;
+});
+
+exports.onceInAMonthHandler = fb.functions.https.onRequest((req, res) => {
+    const val = onceInAMonthHandler.handler(req, res);
+    return val;
+});
+
+exports.smallChecksHandler = fb.functions.https.onRequest((req, res) => {
+    const val = smallChecksHandler.handler(req, res);
     return val;
 });
 

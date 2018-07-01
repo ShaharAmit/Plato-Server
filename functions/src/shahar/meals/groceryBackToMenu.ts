@@ -24,8 +24,8 @@ exports.handler = async (change, context) => {
                     }
                     Promise.all(promises).then(docs => {
                         docs.forEach(doc => {
-                            console.log('importance',doc.data().importance);
-                            t = doc.data().importance;
+                            console.log('isImportant',doc.data().isImportant);
+                            t = doc.data().isImportant;
                         });
                     }).then(() => {
                         if(!t) {

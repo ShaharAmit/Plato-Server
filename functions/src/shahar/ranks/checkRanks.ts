@@ -1,6 +1,5 @@
 import * as firebase from '../../../lib/firebase.js'
 const fb = new firebase();
-//        await fb.db.collection(rest+'/'+restID+'/Messages').where("type", "==", 'meal').where("rawMaterial","==",rawMaterial).where('meal','==',mealName)
 
 function sendMessage(messagesRef, meal, url, icon, bodyMessage,rank,alert) {
     const timestamp = Date.now(),
@@ -17,17 +16,6 @@ function sendMessage(messagesRef, meal, url, icon, bodyMessage,rank,alert) {
     }
 
     messagesRef.doc(String(rank)+String(meal)).set(message).then(console.log('new message inserted')).catch(err => console.log(err));
-
-
-    // messagesRef.where('type','==',"rank").where('meal','==',meal).where('rank','==',rank).get().then(docs => {
-    //     if(docs.size>0) {
-    //         docs.forEach(doc => {
-    //             messagesRef.doc(doc.id).update(message).then(console.log('new message inserted')).catch(err => console.log(err));
-    //         });
-    //     } else {
-    //         messagesRef.doc().set(message).then(console.log('new message inserted')).catch(err => console.log(err));;
-    //     }
-    // })
 }
 
 exports.handler = async (change, context) => {
@@ -48,8 +36,6 @@ exports.handler = async (change, context) => {
             let bodyMessage = '',
                 alert = '',
                 message = false;
-            console.log('size',size);
-            console.log('minRankData',minRankData)
             switch(rank) {
                 case 'Rank1':
                     if(size>=minRankData.rank1) {
