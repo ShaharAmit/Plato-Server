@@ -39,7 +39,8 @@ exports.handler = async (data, context) => {
                         email: worker.email,
                         name: worker.displayName,
                         role: worker.role,
-                        uid: userRecord.uid
+                        id: worker.id,
+                        uid: userRecord.uid,
                     });
                     batch.commit().then(resolve).catch(reject);
                 }).catch(reject);
