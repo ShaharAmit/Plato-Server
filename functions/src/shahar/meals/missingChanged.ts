@@ -3,11 +3,17 @@ const fb = new firebase();
 function writeMessages(missing, rest, restID, mealName,url,icon) {
     const batch = fb.db.batch();
     for(const rawMaterial of missing) {
-        batch.set(fb.db.collection(rest+'/'+restID+'/Messages/').doc(),{
-            title: mealName,
+        const timestamp = Date.now();
+        batch.set(fb.db.collection(rest+'/'+restID+'/Messages/').doc('MealFinished'+mealName),{
+            title: 'the ' + mealName + ' had been removed from menu',
             body: rawMaterial + ' is missing',
             clickAction:  url,
-            icon: icon        
+            icon: icon,
+            type: 'meal',
+            meal: mealName,
+            rawMaterial: rawMaterial,
+            alert: 'autoAlert',
+            timestamp: timestamp
         });
     }
     return batch.commit().then(() => {console.log('messages added')}).catch(err => console.log(err));
@@ -16,16 +22,7 @@ function writeMessages(missing, rest, restID, mealName,url,icon) {
 async function removeMessages(bMissing, rest, restID, mealName) {
     const batch = fb.db.batch();
     for(const rawMaterial of bMissing) {
-        //checking if body starts with 'raMaterial'
-        const strFrontCode = rawMaterial.slice(0, rawMaterial.length-1),
-            strEndCode = rawMaterial.slice(rawMaterial.length-1, rawMaterial.length);
-        let endcode;
-            if(strEndCode==='z') {
-                endcode = rawMaterial + 'a';
-            } else {
-                endcode = strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
-            }
-        await fb.db.collection(rest+'/'+restID+'/Messages').where("title", "==", mealName).where("body",">=",rawMaterial).where("body","<=",endcode)
+        await fb.db.collection(rest+'/'+restID+'/Messages').where("type", "==", 'meal').where("rawMaterial","==",rawMaterial).where('meal','==',mealName)
         .get().then(docs => {
             docs.forEach(doc => {
                 batch.delete(doc.ref);
@@ -48,8 +45,8 @@ exports.handler = async (change, context) => {
         rest = context.params.rest,
         restID = context.params.restID,
         mealName = context.params.mealName,
-        url = 'https://plato-manager-c3bbf.firebaseapp.com',
-        icon = "https://firebasestorage.googleapis.com/v0/b/plato-9a79e.appspot.com/o/logo.png?alt=media&token=1c6777fa-4aed-45ce-a31e-fb66af8aa125";
+        url = fb.url,
+        icon = fb.icon;
         //updated
         if(after) {
             const bMissing = before.missing;
@@ -60,9 +57,11 @@ exports.handler = async (change, context) => {
                     let bMissingArr = Object.keys(bMissing);
                     //checking if old missing array is smaller than new
                     if(aMissingArr.length > bMissingArr.length) {
-                        aMissingArr = await aMissingArr.filter( ( el ) => !bMissingArr.includes( el ) );
-                        const val = await writeMessages(aMissingArr, rest, restID, mealName, url, icon);
-                        return val;
+                        if(!after.displayed && after.displayed !== before.displayed) {
+                            aMissingArr = await aMissingArr.filter( ( el ) => !bMissingArr.includes( el ) );
+                            const val = await writeMessages(aMissingArr, rest, restID, mealName, url, icon);
+                            return val;
+                        }
                     } else {
                         bMissingArr = await bMissingArr.filter( ( el ) => !aMissingArr.includes( el ) );
                         const val = await removeMessages(bMissingArr, rest, restID, mealName);
@@ -72,9 +71,11 @@ exports.handler = async (change, context) => {
             } else if (aMissing) {
                 const aMissingArr = Object.keys(aMissing);
                 if(aMissingArr.length>0) {
-                    //if newley created, check if new missing array is bigger then 0
-                    const val = await writeMessages(aMissingArr, rest, restID, mealName, url, icon);
-                    return val;
+                    if(!after.displayed) {
+                        //if newley created, check if new missing array is bigger then 0
+                        const val = await writeMessages(aMissingArr, rest, restID, mealName, url, icon);
+                        return val;
+                    }     
                 } else {
                     return 0;
                 }

@@ -22,6 +22,8 @@ class FirebaseInitialize {
     googleApiKey: string;
     rest: string
     fieldValue: typeof FirebaseFirestore.FieldValue;
+    icon: string;
+    url: string;
    
     constructor() {
         this.functions = functions;
@@ -35,6 +37,8 @@ class FirebaseInitialize {
         this.googleApiKey = 'AIzaSyAieQ7Jq2rYkjMPgOqTLe9FM4Pcblt1M0k';
         this.rest = 'RestAlfa';
         this.fieldValue = FieldValue;
+        this.url = 'https://plato-manager-c3bbf.firebaseapp.com';
+        this.icon = "https://firebasestorage.googleapis.com/v0/b/plato-9a79e.appspot.com/o/logo.png?alt=media&token=1c6777fa-4aed-45ce-a31e-fb66af8aa125";
     } 
 }
 module.exports = FirebaseInitialize;

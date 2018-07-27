@@ -1,5 +1,6 @@
 import * as firebase from '../../../lib/firebase.js'
-const fb = new firebase();
+const fb = new firebase(),
+    dateFormat = require('dateformat');
 
 exports.handler = async (change, context) => {
     const restID = context.params.restID,
@@ -46,6 +47,7 @@ exports.handler = async (change, context) => {
                     Status: status,
                     TimeStamp: timestamp,
                     Customer: customer,
+                    Time: dateFormat(new Date(), `yyyy-mm-dd'T'HH:MM:ss`),
                     MealJson: JSON.stringify(json)
                 };
                 console.log('row', row)

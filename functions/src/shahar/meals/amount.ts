@@ -1,5 +1,4 @@
 import * as firebase from '../../../lib/firebase.js'
-import { basename } from 'path';
 const fb = new firebase();
 exports.handler = async (change, context) => {
     try {
@@ -33,7 +32,7 @@ exports.handler = async (change, context) => {
                     docs.forEach(doc => {
                         const docVals = doc.data();
                         const docID = doc.id;
-                        if(parseFloat(docVals.redLine) >= aAmn && docVals.importance && docVals.menu) {
+                        if(parseFloat(docVals.redLine) >= aAmn && docVals.isImportant && docVals.menu) {
                             batch.set(fb.db.doc(rest+'/'+restID+'/Meals/'+docID),{
                                 missing: {[rawMaterial]: true},
                                 displayed: false

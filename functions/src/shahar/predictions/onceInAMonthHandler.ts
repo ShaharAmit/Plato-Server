@@ -3,30 +3,19 @@ const fb = new firebase(),
     request = require('request');
 
 function sendReq(restID,rest) {
-    console.log('restID',restID);
-    console.log('utc',rest);
-
-
     fb.db.doc(rest + '/' + restID + '/restGlobals/predictionParams').get().then(doc => {
         if(doc.data()) {
             const data = doc.data(),
-                utc = data.utc,
-                collectData = data.collectData;
-                
-            if(collectData) {
-                request('https://us-central1-plato-9a79e.cloudfunctions.net/collectTableOrders?restID='+restID+'&utc='+utc, { json: true }, (err, resp, body) => {
-                    if(err) console.log(err);
-                    else console.log(body);
-                });
-                request('https://us-central1-plato-9a79e.cloudfunctions.net/collectRawMat?restID='+restID+'&utc='+utc, { json: true }, (err, resp, body) => {
-                    if(err) console.log(err);
-                    else console.log(body);
-                });
-                request('https://us-central1-plato-9a79e.cloudfunctions.net/collectRecommendations?restID='+restID+'&utc='+utc, { json: true }, (err, resp, body) => {
-                    if(err) console.log(err);
-                    else console.log(body);
-                });            }        
-            request('https://us-central1-plato-9a79e.cloudfunctions.net/checkUTC?restID='+restID, { json: true }, (err, resp, body) => {
+                utc = data.utc;
+            request('https://us-central1-plato-9a79e.cloudfunctions.net/gatherMeals?restID='+restID+'&utc='+utc, { json: true }, (err, resp, body) => {
+                if(err) console.log(err);
+                else console.log(body);
+            }); 
+            request('https://us-central1-plato-9a79e.cloudfunctions.net/gatherCustomers?restID='+restID+'&utc='+utc, { json: true }, (err, resp, body) => {
+                if(err) console.log(err);
+                else console.log(body);
+            }); 
+            request('https://us-central1-plato-9a79e.cloudfunctions.net/gatherRanking?restID='+restID, { json: true }, (err, resp, body) => {
                 if(err) console.log(err);
                 else console.log(body);
             }); 
