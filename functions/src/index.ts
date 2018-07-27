@@ -2,7 +2,7 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     registerToRest = require('./shahar/customers/registerToRest'),
     unRegisterToRest = require('./shahar/customers/unRegisterToRest'),
     deleteGlobWorkers = require('./shahar/customers/deleteGlobWorker'),
-    createWorker = require('./shahar/customers/createWorker'),
+    // createWorker = require('./shahar/customers/createWorker'),
     createGlobWorker = require('./shahar/customers/createGlobWorker'),
 
     amount = require('./shahar/meals/amount'),
@@ -42,6 +42,7 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     createStaticObject = require('./createStaticObject'),
     addRawMaterial = require('./addRawMaterial'),
     deleteRawMaterial = require('./deleteRawMaterial'),
+    createWorker = require('./createWorker'),
     preCheckForDeletingRawMaterial = require('./preCheckForDeletingRawMaterial');
 
 import * as firebase from '../lib/firebase.js'
@@ -197,10 +198,10 @@ exports.addKitchenStation = fb.functions.https.onCall((data, context) => {
     return val;
 });
 
-exports.createWorker = fb.functions.https.onCall((data, context) => {
-    const val = createWorker.handler(data, context);
-    return val;
-});
+// exports.createWorker = fb.functions.https.onCall((data, context) => {
+//     const val = createWorker.handler(data, context);
+//     return val;
+// });
 
 exports.addRest = fb.functions.https.onCall((data, context) => {
     const val = addRest.handler(data, context);
@@ -259,5 +260,10 @@ exports.preCheckForDeletingRawMaterial = fb.functions.https.onCall((data, contex
 
 exports.deleteRawMaterial = fb.functions.https.onCall((data, context) => {
     const val = deleteRawMaterial.handler(data, context);
+    return val;
+});
+
+exports.createWorker = fb.functions.https.onCall((data, context) => {
+    const val = createWorker.handler(data, context);
     return val;
 });
