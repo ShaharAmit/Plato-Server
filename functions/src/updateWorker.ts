@@ -17,9 +17,33 @@ exports.handler = async (data, context) => {
                     return;
                 }
 
-                console.log('user', x.docs[0].id);
-                resolve();
+                fb.db.doc(`/RestAlfa/${restId}`).get().then(rest => {
+                    const newEmail = `${name.split(' ')[0]}.${name.split(' ')[1]}@${rest.data().name.toLowerCase()}.com`;
 
+                    fb.auth.getUserByEmail(oldEmail).then(userRecord => {
+                        fb.auth.updateUser(userRecord.uid, {
+                            email: newEmail,
+                            displayName: name
+                        }).then(updatedUser => {
+                            const batch = fb.db.batch();
+                            batch.update(fb.db.doc(`/GlobWorkers/${x.docs[0].id}`), {
+                                email: newEmail,
+                                name,
+                                role
+                            });
+
+                            batch.update(fb.db.doc(`/RestAlfa/${restId}/Workers/${updatedUser.uid}`), {
+                                email: newEmail,
+                                name,
+                                role,
+                                uid: updatedUser.uid
+                            });
+
+                            batch.commit().then(resolve).catch(reject);
+
+                        }).catch(reject);
+                    }).catch(reject);
+                }).catch(reject);
             }).catch(reject);
     });
 
