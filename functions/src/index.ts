@@ -54,6 +54,7 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     deleteRawMaterial = require('./deleteRawMaterial'),
     createWorker = require('./createWorker'),
     updateWorker = require('./updateWorker'),
+    deleteWorker = require('./deleteWorker'),
     preCheckForDeletingRawMaterial = require('./preCheckForDeletingRawMaterial');
 
 import * as firebase from '../lib/firebase.js'
@@ -333,5 +334,10 @@ exports.createWorker = fb.functions.https.onCall((data, context) => {
 
 exports.updateWorker = fb.functions.https.onCall((data, context) => {
     const val = updateWorker.handler(data, context);
+    return val;
+});
+
+exports.deleteWorker = fb.functions.https.onCall((data, context) => {
+    const val = deleteWorker.handler(data, context);
     return val;
 });
