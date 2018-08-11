@@ -4,7 +4,7 @@ const fb = new firebase();
 
 exports.handler = async (data, context) => {
     console.log('restId: ', data.restId);
-    fb.db.collection('RestAlfa' + '/' + data.restId + '/Grocery/').doc(data.grocery.name)
-        .set(data.grocery);
-    console.log('add grocery is working')
+    const batch = fb.db.batch();
+    batch.update(fb.db.collection('RestAlfa' + '/' + data.restId + '/Grocery/').doc(data.grocery.name), data.grocery);
+    return batch.commit();
 };
