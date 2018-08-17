@@ -20,7 +20,7 @@ function checkIfMealsContainDish(restId: string, dishName: string): Promise<{ co
                         if (dishes.docs.length > 0) {
                             resolve({
                                 contains: true,
-                                containingMeal: dishes.docs[0].id
+                                containingMeal: meal.id
                             });
                             return;
                         }
