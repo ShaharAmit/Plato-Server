@@ -57,6 +57,8 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     deleteWorker = require('./deleteWorker'),
     deleteDish = require('./deleteDish'),
     updateDish = require('./updateDish'),
+    deleteMeal = require('./deleteMeal'),
+    deleteGroceryFromDish = require('./deleteGroceryFromDish'),
     preCheckForDeletingRawMaterial = require('./preCheckForDeletingRawMaterial');
 
 import * as firebase from '../lib/firebase.js'
@@ -351,5 +353,15 @@ exports.deleteDish = fb.functions.https.onCall((data, context) => {
 
 exports.updateDish = fb.functions.https.onCall((data, context) => {
     const val = updateDish.handler(data, context);
+    return val;
+});
+
+exports.deleteGroceryFromDish = fb.functions.https.onCall((data, context) => {
+    const val = deleteGroceryFromDish.handler(data, context);
+    return val;
+});
+
+exports.deleteMeal = fb.functions.https.onCall((data, context) => {
+    const val = deleteMeal.handler(data, context);
     return val;
 });

@@ -21,6 +21,7 @@ exports.handler = (data, context) => {
         //batch work below
         batch.set(fb.db.doc(`/RestAlfa/${data.restId}/WarehouseStock/${rawMaterial}/Meals/${data.meal.name}`),
             data.rawMaterials[rawMaterial]);
+        batch.set(fb.db.doc(`/RestAlfa/${data.restId}/Meals/${data.meal.name}/RawMaterials/${rawMaterial}`), { id: rawMaterial });
     });
 
     // batch acctual happen
