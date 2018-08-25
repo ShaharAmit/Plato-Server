@@ -22,6 +22,11 @@ exports.handler = async (data, context) => {
         mealsPredict: false,
         stockPredict: false
     };
+    const rankingAlerts = {
+        rank1: 5,
+        rank2: 5,
+        rank3: 5
+    }
 
 
     console.log("Starting Add Rest Function");
@@ -41,6 +46,7 @@ exports.handler = async (data, context) => {
 
         batch.set(fb.db.collection(`/GlobWorkers/${fbId}/Rest`).doc(restId), userRestObj);
         batch.set(fb.db.collection(`RestAlfa/${rest.id}/restGlobals`).doc('predictionParams'), predictionParams);
+        batch.set(fb.db.collection(`RestAlfa/${rest.id}/restGlobals`).doc('rankingAlerts'), rankingAlerts);
 
         batch.commit().then(resolve).catch(reject);
     });
