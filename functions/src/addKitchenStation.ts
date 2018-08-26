@@ -3,8 +3,11 @@ import * as firebase from '../lib/firebase.js'
 const fb = new firebase();
 
 exports.handler = async (data, context) => {
-    console.log('restId: ', data.restId);
-    fb.db.collection('RestAlfa' + '/' + data.restId + 'KitchenStation').doc(data.id)
-        .set(data.id);
-    console.log('add kitchenStation is working');
+
+    const batch = fb.db.batch();
+    const kitchenStation = data.kitchenStation;
+
+    batch.set(fb.db.collection(`/RestAlfa/${data.restId}/KitchenStation`).doc(kitchenStation.id), kitchenStation);
+
+    return batch.commit();
 };
