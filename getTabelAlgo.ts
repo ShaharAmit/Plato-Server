@@ -198,14 +198,16 @@ function combineTables(tablesArr,restId) {
                                            movedTable : tableCanidate,
                                            connectedToTable : table
                                        }
-                                      let newTableObj =  handler(data,"1231")                                      newTableObj.connectedTo["table"+tableCanidate.id] = true;
+                                      let newTableObj =  handler(data,"1231")                                     
+                                      newTableObj.connectedTo["table"+tableCanidate.id] = true;
                                       newTableObj.connectedNow = true;
                                     //new Table is
                                       console.log(newTableObj)
                                       for(let t = 0 ;t<tablesArr.length;t++){
                                           if(tablesArr[t].id == tableCanidate.id){
                                                tablesArr[t].displayed = false;
-                                               tablesArr[t].connectedNow = true;                                              tablesArr[t].connectedTo["table"+newTableObj.id] = true;
+                                               tablesArr[t].connectedNow = true;                                             
+                                             tablesArr[t].connectedTo["table"+newTableObj.id] = true;
                                           }
                                       }
                                    //end
