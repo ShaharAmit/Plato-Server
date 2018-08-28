@@ -48,6 +48,7 @@ exports.handler = async (data, context) => {
     mergedTable.connectedNow = true;
     const batch = fb.db.batch();
 
+    console.log('movedTable', movedTable);
     batch.update(fb.db.doc(`/RestAlfa/${restId}/Tables/${movedTable.id}`), {displayed: false});
     batch.set(fb.db.doc(`/RestAlfa/${restId}/Tables/${connectedToTable.id}`), mergedTable, {merge: true});
 
