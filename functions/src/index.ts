@@ -59,6 +59,7 @@ const sendMessage = require('./shahar/customers/sendMessage'),
     updateDish = require('./updateDish'),
     deleteMeal = require('./deleteMeal'),
     updateMeal = require('./updateMeal'),
+    updateRest = require('./updateRest'),
     deleteDishFromMeal = require('./deleteDishFromMeal'),
     deleteGroceryFromDish = require('./deleteGroceryFromDish'),
     deleteKitchenStation = require('./deleteKitchenStation'),
@@ -381,5 +382,10 @@ exports.deleteDishFromMeal = fb.functions.https.onCall((data, context) => {
 
 exports.deleteKitchenStation = fb.functions.https.onCall((data, context) => {
     const val = deleteKitchenStation.handler(data, context);
+    return val;
+});
+
+exports.updateRest = fb.functions.https.onCall((data, context) => {
+    const val = updateRest.handler(data, context);
     return val;
 });
