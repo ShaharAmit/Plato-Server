@@ -17,20 +17,26 @@ exports.handler = async (data: ({ movedTable: Table, connectedToTable: Table, re
 
     return new Promise((resolve, reject) => {
 
-
+        // check if widths of two tables are equals
         if (connectedToTable.width === movedTable.width) {
+            // Checks if the heights of the two tables are heigher than the height of the grid
             if (connectedToTable.y + connectedToTable.height + movedTable.height > height) {
                 throw new HttpsError("aborted", 'Can\'t connect tables, height will overflow');
             }
-        } else if (connectedToTable.height === movedTable.height) {
+        }
+        // check if heights of two tables are equals
+        else if (connectedToTable.height === movedTable.height) {
+            // Checks if the widths of the two tables are higher than the height of the grid
             if (connectedToTable.x + connectedToTable.width + movedTable.width > width) {
                 throw new HttpsError("aborted", 'Can\'t connect tables, width will overflow');
             }
         }
         else {
+            // heights or width of two tables not equal, therefor it's possible to connect them
             throw new HttpsError("aborted", "Can only connect tables with same width or height");
         }
 
+        // check if table display == true
         fb.db.collection<Table>(`/${fb.rest}/${data.restId}/Tables`, ref => ref.where('displayed', '==', 'true')).get()
             .then(tablesQuerySnapshot => {
                 const tables = [];
@@ -39,6 +45,7 @@ exports.handler = async (data: ({ movedTable: Table, connectedToTable: Table, re
                 const grid = createEmptyGridObject();
                 markRectangles(grid, tables);
                 markRectangles(grid, [connectedToTable, movedTable], false);
+                // check if tables are ovveride, if not, merge tables and show in grid 
                 if (willRectangleWontOverrideOtherRectangles(grid, getMergedRectangle(connectedToTable, movedTable))) {
                     throw new HttpsError("aborted", 'Merged Table Will Override Existing tables');
                 }
@@ -49,6 +56,7 @@ exports.handler = async (data: ({ movedTable: Table, connectedToTable: Table, re
     });
 };
 
+// create a new empty grid
 function createEmptyGridObject() {
     const grid = {};
     for (let row = 0; row < height; row++) {
@@ -62,6 +70,7 @@ function createEmptyGridObject() {
     return grid;
 }
 
+// write all tables in grid
 function markRectangles(grid, rectangles, selectionState = true) {
     rectangles.forEach(rect => {
         for (let row = rect.y; row < rect.y + rect.height; row++) {
@@ -72,6 +81,7 @@ function markRectangles(grid, rectangles, selectionState = true) {
     });
 }
 
+// check if table isn't override another table
 function willRectangleWontOverrideOtherRectangles(grid, table: Table): boolean {
     console.log('grid', grid);
     console.log('merged', table);
@@ -85,6 +95,7 @@ function willRectangleWontOverrideOtherRectangles(grid, table: Table): boolean {
     return false;
 }
 
+// class of table
 export class Table {
     displayed = true;
     x: number;
@@ -93,6 +104,7 @@ export class Table {
     height: number;
 }
 
+// class of grid cell in map of tables
 class GridCell {
     isSelected: boolean = false;
 }

@@ -28,7 +28,8 @@ exports.handler = async (data, context) => {
                     email: worker.email,
                     name: worker.displayName,
                     role: worker.role,
-                    id: worker.id
+                    id: worker.id,
+                    pic: worker.pic
                 }).then(x => {
 
                     const batch = fb.db.batch();
