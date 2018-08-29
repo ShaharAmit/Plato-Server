@@ -7,7 +7,7 @@ exports.handler = async (data, context) => {
     const batch = fb.db.batch();
     const kitchenStation = data.kitchenStation;
 
-    batch.set(fb.db.collection(`/RestAlfa/${data.restId}/KitchenStation`).doc(kitchenStation.id), kitchenStation);
+    batch.set(fb.db.collection(`/${fb.rest}/${data.restId}/KitchenStation`).doc(kitchenStation.id), kitchenStation);
 
     return batch.commit();
 };

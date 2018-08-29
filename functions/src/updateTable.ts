@@ -8,7 +8,7 @@ exports.handler = async (data, context) => {
     const tableId = data.tableId;
     console.log('data', data);
     const batch = fb.db.batch();
-    batch.update(fb.db.doc(`/RestAlfa/${restId}/Tables/${tableId}`), data.newTable);
+    batch.update(fb.db.doc(`/${fb.rest}/${restId}/Tables/${tableId}`), data.newTable);
 
     return batch.commit();
 }

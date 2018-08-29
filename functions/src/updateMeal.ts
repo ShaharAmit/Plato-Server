@@ -6,5 +6,5 @@ exports.handler = async (data, context) => {
     const restId = data.restId;
     const meal = data.meal;
 
-    return fb.db.collection(`/RestAlfa/${restId}/Meals`).doc(meal.name).set(meal, { merge: true });
+    return fb.db.collection(`/${fb.rest}/${restId}/Meals`).doc(meal.name).set(meal, { merge: true });
 };

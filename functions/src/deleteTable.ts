@@ -9,7 +9,7 @@ exports.handler = async (data, context) => {
     const tableId = data.tableId;
 
     return new Promise((resolve, reject) => {
-        fb.db.collection(`/RestAlfa/${restId}/TablesOrders/${tableId}/orders`).get().then(orders => {
+        fb.db.collection(`/${fb.rest}/${restId}/TablesOrders/${tableId}/orders`).get().then(orders => {
             orders.forEach(order => {
                 const status = order.data().status;
                 if (status === 'active' || status === 'scheduled') {
@@ -17,7 +17,7 @@ exports.handler = async (data, context) => {
                 }
             })
             const batch = fb.db.batch();
-            batch.delete(fb.db.doc(`/RestAlfa/${restId}/Tables/${tableId}`));
+            batch.delete(fb.db.doc(`/${fb.rest}/${restId}/Tables/${tableId}`));
             batch.commit().then(resolve).catch(reject);
 
         }).catch(reject);

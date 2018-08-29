@@ -26,7 +26,7 @@ function createDish(dishDoc, data, reject, resolve) {
 
 exports.handler = async (data, context) => {
     console.log('restId: ', data.restId);
-    const dishDoc = fb.db.collection('RestAlfa' + '/' + data.restId + '/Dishes/').doc(data.dish.name);
+    const dishDoc = fb.db.collection(fb.rest + '/' + data.restId + '/Dishes/').doc(data.dish.name);
     return new Promise((resolve, reject) => {
 
         dishDoc.get().then(x => {

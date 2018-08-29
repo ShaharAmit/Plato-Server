@@ -12,7 +12,7 @@ exports.handler = async (data, context) => {
 
     return new Promise(((resolve, reject) => {
 
-        fb.db.doc(`/RestAlfa/${restId}`).get().then(rest => {
+        fb.db.doc(`/${fb.rest}/${restId}`).get().then(rest => {
             worker.email = `${worker.firstName}.${worker.lastName}@${rest.data().name.toLowerCase()}.com`;
 
             fb.auth.createUser({
@@ -35,7 +35,7 @@ exports.handler = async (data, context) => {
                     const restData = {};
                     restData[restId] = true;
                     batch.set(fb.db.collection(`/GlobWorkers/${x.id}/Rest`).doc(restId), restData);
-                    batch.set(fb.db.collection(`/RestAlfa/${restId}/Workers`).doc(userRecord.uid), {
+                    batch.set(fb.db.collection(`/${fb.rest}/${restId}/Workers`).doc(userRecord.uid), {
                         email: worker.email,
                         name: worker.displayName,
                         role: worker.role,

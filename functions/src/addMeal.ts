@@ -5,7 +5,7 @@ const fb = new firebase();
 exports.handler = (data, context) => {
     console.log('restId: ', data.restId);
     console.log('data', data);
-    const mealDoc = fb.db.collection('RestAlfa' + '/' + data.restId + '/Meals/').doc(data.meal.name);
+    const mealDoc = fb.db.collection(fb.rest + '/' + data.restId + '/Meals/').doc(data.meal.name);
     //creating the batch below
     const batch = fb.db.batch();
 
@@ -19,9 +19,9 @@ exports.handler = (data, context) => {
 
     Object.keys(data.rawMaterials).forEach(rawMaterial => {
         //batch work below
-        batch.set(fb.db.doc(`/RestAlfa/${data.restId}/WarehouseStock/${rawMaterial}/Meals/${data.meal.name}`),
+        batch.set(fb.db.doc(`/${fb.rest}/${data.restId}/WarehouseStock/${rawMaterial}/Meals/${data.meal.name}`),
             data.rawMaterials[rawMaterial]);
-        batch.set(fb.db.doc(`/RestAlfa/${data.restId}/Meals/${data.meal.name}/RawMaterials/${rawMaterial}`), { id: rawMaterial });
+        batch.set(fb.db.doc(`/${fb.rest}/${data.restId}/Meals/${data.meal.name}/RawMaterials/${rawMaterial}`), { id: rawMaterial });
     });
 
     // batch acctual happen

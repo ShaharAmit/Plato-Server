@@ -31,7 +31,7 @@ exports.handler = async (data: ({ movedTable: Table, connectedToTable: Table, re
             throw new HttpsError("aborted", "Can only connect tables with same width or height");
         }
 
-        fb.db.collection<Table>(`/RestAlfa/${data.restId}/Tables`, ref => ref.where('displayed', '==', 'true')).get()
+        fb.db.collection<Table>(`/${fb.rest}/${data.restId}/Tables`, ref => ref.where('displayed', '==', 'true')).get()
             .then(tablesQuerySnapshot => {
                 const tables = [];
                 tablesQuerySnapshot.forEach(x => tables.push(x.data()));

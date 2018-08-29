@@ -7,12 +7,12 @@ exports.handler = async (data, context) => {
     const mealName = data.mealName;
 
     return new Promise((resolve, reject) => {
-        fb.db.collection(`/RestAlfa/${restId}/Meals/${mealName}/RawMaterials`).get().then(rawMaterials => {
+        fb.db.collection(`/${fb.rest}/${restId}/Meals/${mealName}/RawMaterials`).get().then(rawMaterials => {
             const batch = fb.db.batch();
             rawMaterials.docs.forEach(rawMaterial => {
-                batch.delete(fb.db.doc(`/RestAlfa/${restId}/WarehouseStock/${rawMaterial.id}/Meals/${mealName}`));
+                batch.delete(fb.db.doc(`/${fb.rest}/${restId}/WarehouseStock/${rawMaterial.id}/Meals/${mealName}`));
             });
-            batch.delete(fb.db.doc(`/RestAlfa/${restId}/Meals/${mealName}`));
+            batch.delete(fb.db.doc(`/${fb.rest}/${restId}/Meals/${mealName}`));
 
             batch.commit().then(resolve).catch(reject);
         }).catch(reject);

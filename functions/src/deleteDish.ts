@@ -5,7 +5,7 @@ const fb = new firebase();
 
 function checkIfMealsContainDish(restId: string, dishName: string): Promise<{ contains: boolean, containingMeal: string }> {
     return new Promise<{ contains: boolean, containingMeal: string }>((resolve, reject) => {
-        fb.db.collection(`/RestAlfa/${restId}/Meals`).get().then(meals => {
+        fb.db.collection(`/${fb.rest}/${restId}/Meals`).get().then(meals => {
             let mealsChecked = 0;
             const totalMeals = meals.docs.length;
 
@@ -15,7 +15,7 @@ function checkIfMealsContainDish(restId: string, dishName: string): Promise<{ co
 
             console.log('totalMeals', totalMeals);
             meals.docs.forEach(meal => {
-                fb.db.collection(`/RestAlfa/${restId}/Meals/${meal.id}/dishes`).where("id", "==", dishName).get()
+                fb.db.collection(`/${fb.rest}/${restId}/Meals/${meal.id}/dishes`).where("id", "==", dishName).get()
                     .then(dishes => {
                         if (dishes.docs.length > 0) {
                             resolve({
@@ -49,7 +49,7 @@ exports.handler = async (data, context) => {
                 return;
             }
 
-            fb.db.doc(`/RestAlfa/${restId}/Dishes/${dish.name}`).delete().then(resolve).catch(reject);
+            fb.db.doc(`/${fb.rest}/${restId}/Dishes/${dish.name}`).delete().then(resolve).catch(reject);
 
         }).catch(reject);
     });

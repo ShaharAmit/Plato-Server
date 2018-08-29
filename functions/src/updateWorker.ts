@@ -17,7 +17,7 @@ exports.handler = async (data, context) => {
                     return;
                 }
 
-                fb.db.doc(`/RestAlfa/${restId}`).get().then(rest => {
+                fb.db.doc(`/${fb.rest}/${restId}`).get().then(rest => {
                     const newEmail = `${name.split(' ')[0]}.${name.split(' ')[1]}@${rest.data().name.toLowerCase()}.com`;
 
                     fb.auth.getUserByEmail(oldEmail).then(userRecord => {
@@ -32,7 +32,7 @@ exports.handler = async (data, context) => {
                                 role
                             });
 
-                            batch.update(fb.db.doc(`/RestAlfa/${restId}/Workers/${updatedUser.uid}`), {
+                            batch.update(fb.db.doc(`/${fb.rest}/${restId}/Workers/${updatedUser.uid}`), {
                                 email: newEmail,
                                 name,
                                 role,

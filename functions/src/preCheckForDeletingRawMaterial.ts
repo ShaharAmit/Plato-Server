@@ -13,7 +13,7 @@ class PreCheckResult {
 exports.PreCheckResult = PreCheckResult;
 
 exports.handler = async (data, context) => {
-    const rawMaterialDoc = fb.db.collection(`/RestAlfa/${data.restId}/WarehouseStock`).doc(data.name);
+    const rawMaterialDoc = fb.db.collection(`/${fb.rest}/${data.restId}/WarehouseStock`).doc(data.name);
     return new Promise((resolve, reject) => {
         rawMaterialDoc.collection('Meals').where('isImportant', '==', true).get()
             .then(mealsSnapshot => {

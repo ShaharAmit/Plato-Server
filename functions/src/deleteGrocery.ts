@@ -5,7 +5,7 @@ const fb = new firebase();
 
 function checkIfDishesContainsGrocery(restId: string, groceryName: string): Promise<{ contains: boolean, containgDish: string }> {
     return new Promise<{ contains: boolean, containgDish: string }>((resolve, reject) => {
-        fb.db.collection(`/RestAlfa/${restId}/Dishes`).get().then(dishes => {
+        fb.db.collection(`/${fb.rest}/${restId}/Dishes`).get().then(dishes => {
             const totalDishes = dishes.docs.length;
             let checkedDishes = 0;
             if (totalDishes === 0) {
@@ -13,7 +13,7 @@ function checkIfDishesContainsGrocery(restId: string, groceryName: string): Prom
             }
 
             dishes.docs.forEach(dish => {
-                fb.db.collection(`/RestAlfa/${restId}/Dishes/${dish.id}/grocery`).where("id", "==", groceryName)
+                fb.db.collection(`/${fb.rest}/${restId}/Dishes/${dish.id}/grocery`).where("id", "==", groceryName)
                     .get().then(groceries => {
                         if (groceries.docs.length > 0) {
                             resolve({ contains: true, containgDish: dish.id });
@@ -44,7 +44,7 @@ exports.handler = async (data, context) => {
             }
 
             const batch = fb.db.batch();
-            batch.delete(fb.db.collection('RestAlfa' + '/' + data.restId + '/Grocery/').doc(data.grocery.name));
+            batch.delete(fb.db.collection(fb.rest + '/' + data.restId + '/Grocery/').doc(data.grocery.name));
             batch.commit().then(resolve).catch(reject);
         }).catch(reject);
     });

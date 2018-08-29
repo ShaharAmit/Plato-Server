@@ -7,5 +7,5 @@ exports.handler = async (data, context) => {
     const dishName = data.dishName;
     const groceryName = data.groceryName;
 
-    return fb.db.doc(`/RestAlfa/${restId}/Dishes/${dishName}/grocery/${groceryName}`).delete();
+    return fb.db.doc(`/${fb.rest}/${restId}/Dishes/${dishName}/grocery/${groceryName}`).delete();
 }

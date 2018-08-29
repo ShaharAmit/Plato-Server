@@ -26,7 +26,7 @@ exports.handler = async (data, context) => {
                                 .then(resolve).catch(reject);
 
                             const batch = fb.db.batch();
-                            batch.delete(fb.db.doc(`/RestAlfa/${restId}/Workers/${userRecord.uid}`));
+                            batch.delete(fb.db.doc(`/${fb.rest}/${restId}/Workers/${userRecord.uid}`));
                             batch.commit().then(resolve).catch(reject);
                             return;
                         }
@@ -36,7 +36,7 @@ exports.handler = async (data, context) => {
 
                             const batch = fb.db.batch();
                             batch.delete(fb.db.doc(`/GlobWorkers/${userId}`));
-                            batch.delete(fb.db.doc(`/RestAlfa/${restId}/Workers/${userRecord.uid}`));
+                            batch.delete(fb.db.doc(`/${fb.rest}/${restId}/Workers/${userRecord.uid}`));
                             batch.commit().then(resolve).catch(reject);
 
                         }).catch(reject);

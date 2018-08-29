@@ -26,21 +26,21 @@ exports.handler = async (data, context) => {
     console.log("Starting Add Rest Function");
 
     return new Promise((resolve, reject) => {
-        const restDoc = fb.db.collection('RestAlfa').doc(rest.id);
+        const restDoc = fb.db.collection(fb.rest).doc(rest.id);
         const subMenusDoc = restDoc.collection('restGlobals').doc('subMenus');
 
         console.log("Adding sub menus");
         batch.set(subMenusDoc, subMenus);
         batch.set(restDoc, rest);
         for (let i = 0; i < workingDays.length; i++) {
-            batch.set(fb.db.collection(`RestAlfa/${rest.id}/WorkingDays`).doc(`${i}`), workingDays[i]);
-            batch.set(fb.db.collection(`RestAlfa/${rest.id}/YearlyActivity`).doc(`${i}`), workingDays[i]);
-            batch.set(fb.db.collection(`RestAlfa/${rest.id}/YearlyUse`).doc(`${i}`), workingDays[i]);
+            batch.set(fb.db.collection(`${fb.rest}/${rest.id}/WorkingDays`).doc(`${i}`), workingDays[i]);
+            batch.set(fb.db.collection(`${fb.rest}/${rest.id}/YearlyActivity`).doc(`${i}`), workingDays[i]);
+            batch.set(fb.db.collection(`${fb.rest}/${rest.id}/YearlyUse`).doc(`${i}`), workingDays[i]);
         }
 
         batch.set(fb.db.collection(`/GlobWorkers/${fbId}/Rest`).doc(restId), userRestObj);
-        batch.set(fb.db.collection(`RestAlfa/${rest.id}/restGlobals`).doc('predictionParams'), predictionParams);
-        batch.set(fb.db.collection(`RestAlfa/${rest.id}/restGlobals`).doc('rankingAlerts'), data.ranking);
+        batch.set(fb.db.collection(`${fb.rest}/${rest.id}/restGlobals`).doc('predictionParams'), predictionParams);
+        batch.set(fb.db.collection(`${fb.rest}/${rest.id}/restGlobals`).doc('rankingAlerts'), data.ranking);
 
         batch.commit().then(resolve).catch(reject);
     });

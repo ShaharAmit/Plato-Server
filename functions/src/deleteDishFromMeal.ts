@@ -8,7 +8,7 @@ exports.handler = async (data, context) => {
     const dishName = data.dishName;
 
     const batch = fb.db.batch();
-    batch.delete(fb.db.doc(`/RestAlfa/${restId}/Meals/${mealName}/dishes/${dishName}`));
+    batch.delete(fb.db.doc(`/${fb.rest}/${restId}/Meals/${mealName}/dishes/${dishName}`));
 
     return batch.commit();
 }

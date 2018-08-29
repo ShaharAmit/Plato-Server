@@ -49,8 +49,8 @@ exports.handler = async (data, context) => {
     const batch = fb.db.batch();
 
     console.log('movedTable', movedTable);
-    batch.update(fb.db.doc(`/RestAlfa/${restId}/Tables/${movedTable.id}`), {displayed: false});
-    batch.set(fb.db.doc(`/RestAlfa/${restId}/Tables/${connectedToTable.id}`), mergedTable, {merge: true});
+    batch.update(fb.db.doc(`/${fb.rest}/${restId}/Tables/${movedTable.id}`), {displayed: false});
+    batch.set(fb.db.doc(`/${fb.rest}/${restId}/Tables/${connectedToTable.id}`), mergedTable, {merge: true});
 
     return new Promise((resolve, reject) => {
         batch.commit()
