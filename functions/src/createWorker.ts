@@ -13,7 +13,7 @@ exports.handler = async (data, context) => {
     return new Promise(((resolve, reject) => {
 
         fb.db.doc(`/${fb.rest}/${restId}`).get().then(rest => {
-            worker.email = `${worker.firstName}.${worker.lastName}@${rest.data().name.toLowerCase()}.com`;
+            worker.email = `${worker.firstName}.${worker.lastName}@${rest.data().name.toLowerCase().replace('-', '')}.com`;
 
             fb.auth.createUser({
                 email: worker.email,
